@@ -1,0 +1,139 @@
+{% extends "/templates/base.html" %}
+{% block articulo %}
+	<div class="prearti" id='dsel001HT' itemscope itemtype="http://schema.org/SomeProducts">
+		<h1><span class='icon-pizza4'></span> Pizzas</h1>
+		<table class="tablapiz vlargo" cellpadding="5px">
+			<thead>
+				<td><sub>Masas</sub>/<sup>Tamaños</sup></td>
+					{% for ta in res["tamas"] %}
+						<td>{{ ta[1] }}</td>
+					{% endfor %}
+				
+			</thead>	
+			<tbody>
+				{% for ma in res["masas"] -%}
+					<tr><td><div>{{ ma[1] }}</div><div><sup>Base</sup><br><sub>Ing.</sub></div></td>
+					{% for ta in res["tamas"] -%}
+						{% for mt in res["matas"] -%}
+							 {%- if mt[1]==ma[0] and mt[2]==ta[0] -%}
+							 {% set hay=3 %}
+						        <td><strong >{{ "%.2f"|format(mt[3]) }}</strong ><br><strong >{{ "%.2f"|format(mt[4]) }}</strong > </td>
+						        {% break %}
+						      {% endif %}
+						      {%- if loop.last -%}
+						      	<td>-</td>
+						      {% endif %}
+						 {%- endfor %}
+					{%- endfor %}
+					</tr>
+				{%- endfor %}
+			</tbody>
+		</table>
+		<h4 class="vlargo">Salsas</h4>
+		<label class="vlargo">
+		{% for sa in res["sal"] -%}
+			{{ sa[1] }}
+			{%- if not loop.last -%}
+				,
+			{% endif %}
+		{%- endfor %}
+		</label>
+		<h4 class="vlargo">Ingredientes</h4>
+		<label class="vlargo">
+		{% for ing in res["ingres"] -%}
+			{{ ing[1] }}
+			{%- if not loop.last -%}
+				,
+			{% endif %}
+		{%- endfor %}
+		</label>
+		<div>
+			<h3>Haz la pizza a tu gusto</h3>
+			<div class="btn-articulo">
+				<h2 itemprop="name" >AL GUSTO</h2>
+				<span itemprop="description" >
+					Elige la Masa y el tamaño y añade la Salsa y los Ingredientes que más te gusten.<br>
+					Puedes hacerla entera o por mitades.
+				</span>
+				<div class="btn-add-articulo">
+					<button data-idpiz="x"><span class='icon-addshop'></span> Añadir</button>
+				</div>
+			</div>
+		</div>
+		{% set gru="" %}
+		{% for piz in res["piz"] %}
+			{%- if piz[8]!=gru -%}
+			{%- if gru!="" -%} </div> {% endif %}
+			<div>
+				{%- if piz[8]!="0" -%}
+					<h3> {{ piz[8]|upper() }} </h3> 
+				{% endif %}
+				{% set gru=piz[8] %}
+			{% endif %}
+			<div class="btn-articulo">
+				<div class='inte-btn-articulo'>
+					<h2 itemprop="name">{{ piz[1] }}</h2>
+					{% if piz[9] %}
+					<div class='img-articulo'><img src="{{ piz[9] }}" alt="{{ piz[1] }}" /><button class='mas-articulo'>mas</button></div>
+					<span class='sp-abso-articulo spannover' itemprop="description" >
+					{% else %}
+					<span itemprop="description" class="spanver">
+					{% endif %}
+						{% for sa in res["sal"] -%}
+							 {%- if sa[0]==piz[3] -%}
+							 	Salsa {{ sa[1] }}
+							 	{% break %}
+							 {% endif %}
+						{%- endfor %},
+						{% if piz [4] %}
+							queso mozzarella
+						{% else %}
+							sin queso
+						{% endif %}
+						{% for ii in piz[5] -%}
+							{% for ing in res["ingres"] -%}
+								{%- if ing[0]==ii -%}
+								 	{{ ing[1] }}
+								 	{%- if not loop.last -%}
+										,
+									{% endif %}
+								 	{% break %}
+								{% endif %}
+							{%- endfor %}
+						{%- endfor %}
+						<br><b>Masas:</b>
+						{% for i in piz[6] -%}
+							{% for mt in res["matas"] -%}
+								{% if mt[0]==i %}
+									{% for ma in res["masas"] -%}
+										{%- if mt[1]==ma[0] -%}
+											{{ ma[1] }}
+											{% break %}
+										{% endif %}
+									{% endfor %}
+									{% for ta in res["tamas"] -%}
+										{%- if mt[2]==ta[0] -%}
+											{{ ta[1] }}
+											{% break %}
+										{% endif %}
+									{%- endfor %}
+									{% break %}
+								{% endif %}
+							{%- endfor %}
+							{%- if not loop.last -%}
+								,
+							{% endif %}
+						{% else %}
+							Todas
+						{%- endfor %}
+					</span>
+				</div>
+				<div class="btn-add-articulo">
+					<select><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+					<button><span class='icon-addshop'></span> Añadir</button> <button><span class='icon-edit'></span> Modificar</button>
+				</div>
+			</div>
+		{% endfor %}
+		</div>
+	</div>
+{% endblock %}

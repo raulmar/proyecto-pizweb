@@ -1,0 +1,240 @@
+.gracp{
+	background: #366686; /* Old browsers */
+}
+.ventanaprin-dentro {
+	overflow-y:auto;
+	position: relative;
+	text-align: center;
+}
+		
+.ventanaprin-contenido1 {
+	background: #f0f9ff;
+	position: relative;
+	display: inline-block;
+	font-family: 'open Sans', sans-serif, Helvetica,Verdana,Arial;
+	box-sizing: border-box;
+	vertical-align: top;
+	/*border:1px solid #b8c6df;*/
+	width: 48%;
+	margin:0.5%;
+	/*margin: 0.5em auto;*/
+}
+.ventanaprin-contenido2 {
+	background: #f0f9ff;
+	position: relative;
+	display: block;
+	font-family: 'open Sans', sans-serif, Helvetica,Verdana,Arial;
+	box-sizing: border-box;
+	vertical-align: top;
+	width: 100%;
+	margin: auto;
+	/*border:2px solid #b8c6df;*/
+	
+	margin-bottom: 0.5em;
+	
+}
+.ventanaprin-cabecera {
+	padding: 0.5em 3.5em 0.5em 2em;
+	margin: 0;
+	font-size: 1em;
+	text-shadow:1px 1px 2px #000000;
+	position: relative;
+}
+.ventanaprin-cabecera > span {
+	color:#cde;
+	font-size: 1.2em;
+	font-weight: bold;
+}
+.ventanaprin-cabecera > .cerrar {
+	top: 0px;
+	right: 0;
+	height: 1.9em;
+	display:block;
+	position: absolute;
+	cursor: pointer;
+	color: #cde;
+	font-size: 1em;
+	font-family: Verdana;
+	padding: 0.5em 0.5em 0em;
+	background: blue;
+	text-shadow: 1px 1px 2px #000000;
+	border-left: 1px solid rgb(51, 46, 46);
+}
+
+.ventanaprin-cabecera > .cerrar:hover {
+	color:white;
+	background: red;
+	text-shadow:0px 0px 0px #000000;
+}
+.ventanaprin-pie {
+	font-size: 1em;
+	padding: 0.5em 1em;
+
+	margin: 0;
+	text-align: right;
+}
+
+
+
+
+
+.ventanatitprin-contenido {
+	/*background: #f0f9ff;*/
+	position: relative;
+	display: block;
+	font-family: 'open Sans', sans-serif, Helvetica,Verdana,Arial;
+	box-sizing: border-box;
+	vertical-align: top;
+	width: 100%;
+	margin-top: 1em;
+	
+}
+.ventanatitprin-cabecera {
+	position: relative;
+	font-size: 1em;
+	padding: 0.5em 3.5em 0.5em 3em;
+	margin: 0;
+	background: #34495e; /* Old browsers */
+}
+
+.ventanatitprin-cabecera > span {
+	color:#cde;
+	font-size: 2em;
+	font-weight: bold;
+}
+.ventanatitprin-cabecera > .cerrar {
+	top: 0px;
+	right: 0;
+	height: 1.9em;
+	display:block;
+	position: absolute;
+	cursor: pointer;
+	color:#9FB3C7;
+	font-size: 1em;
+	font-family: Verdana;
+	padding: 0.5em 0.5em 0em;
+	background: #e74c3c;
+	border-bottom-left-radius: 0.5em;
+	-webkit-transition: 0.25s;
+	-moz-transition: 0.25s;
+	-o-transition: 0.25s;
+	transition: 0.25s;
+	/*text-shadow: 1px 1px 2px #000000;
+	border-left: 1px solid rgb(51, 46, 46);*/
+}
+.ventanatitprin-cabecera > .cerrar:hover {
+	color:white;
+	background: #ec7063;
+	/*text-shadow:0px 0px 0px #000000;*/
+}
+.tiprindentro{
+	/*border:1px solid #28343b; b5bdc8;*/
+	border-top:0;
+	/*background: #28343b;*/
+} 
+
+.wrapper{
+	/*max-width: 1200px;*/
+	margin: auto;
+	box-sizing: border-box;
+
+}
+.divmenu {
+	position: absolute;
+	top: 70px;
+	left:0px;
+	width: 200px;
+	bottom: 0px;
+}
+.divmenu a {
+	width: 184px;
+	padding: 0.5em;
+}
+.loader {
+	position: absolute;
+	top:50%;
+	left: 50%;
+	width: 30px;
+	height: 30px;
+	background-image:url("486.gif");
+}
+.marco-principal{
+	
+	/*max-width: 1200px;
+	
+	margin: auto;
+	margin-top: 1em;*/
+	position: absolute;
+	top:70px;
+	left:200px;
+	right: 0px;
+	bottom: 0px;
+	overflow-y: auto;
+	background-color: #F5F5E5;
+}
+.marco-subprin {
+	position: relative;
+	width: 98%;
+	margin: auto;
+	/*max-width: 1200px;*/
+}
+
+.marco-hijo{
+	position: absolute;
+	top:0px;
+	left:0px;
+	width: 100%;
+	/*max-width: 1200px;*/
+
+}
+.color-claro {
+	background-color: rgb(237, 237, 248);
+}
+.bloqs_ven_form{
+	display: inline-block;
+	max-width: 700px;
+	margin:0.5em;
+	border:1px solid #fff;
+	border-bottom: 1px dotted #999;
+	vertical-align: top;
+}
+.bloqs_ven_form:hover {
+	border: 1px solid #5159BE;
+	box-shadow: 0px 0px 3px #5159BE;
+}
+.elim_form{
+	text-align:right;
+	padding:0.5em;
+}
+/*****************+ media querys *****************/
+@media screen and (max-width:1000px){
+	.divmenu {
+		position: relative;
+		width: 100%;
+		top:0;
+	}
+	.divmenu a {
+		width: auto;
+		padding: 0.5em 1em;
+	}
+	.marco-principal{
+		margin-top: 1em;
+		position: relative;
+		top: 0;
+		left: 0;
+		overflow-y: visible;
+	}
+}
+@media screen and (max-width:450px){
+	.divmenu a {
+		width: 50%;
+		text-align: center;
+		padding: 0.5em 0;
+	}
+}
+@media screen and (max-width:650px){
+
+	.ventanaprin-contenido1{
+		width: 100%;
+	}
+}

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/Restaurant" lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1">
+	<title>{{ titulo }} en {{ lugar }}</title>
+	<link rel="shortcut icon" type="image/x-icon"  href="imagenes/favicon.ico" />
+	<meta name="keywords" content="pizzas, pizza, pizzerias, pizzeria, tiendas, comida a domicilio, comida para llevar, menus, pasta, ofertas, pedir, pedido, online, ensalada, promocion, promociones, hamburguesas, internet, descuento, descuentos, oferta, ofertas">
+	<meta name="description" itemprop="description" content="{{ nomtien }} tu pizzería de comida a domicilio en {{ lugar }}. Pide tu pizza por Internet y disfruta de promociones online exclusivas. Regalos y descuentos.">
+	<link rel="stylesheet"  href="css/normalize.css"/>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet"  href="normalize.css"/>
+	<link rel="stylesheet" type="text/css" href="micssmasflaticon_10.css">
+	<script src="hutils.js"></script>
+<!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+<script>
+window.server={tienda:"{{ nomtien }}",url: "{{ urltien }}", hhccl:"{{ haycli }}"};
+{% if errorh %}
+window.server.errorh="{{ errorh }}";
+{% endif %}
+</script>
+<body >
+	<div class='contenedor'>
+		<header >
+			<div class="barra-top">
+				<div class="logo">
+					
+					<figure>
+						<img src="{{ nomima }}">
+					</figure>
+				</div>
+				<div id='nomtienda' class='top-right'>
+					{{ cliemail }}
+				</div>
+			</div>
+			<nav id ="menuprin" class="menu-prin menular">
+				<div class="svgmenu"><button id="bot-menu"><span class="icon-indent-increase"></span></button></div>
+				<ul>
+					<li ><a itemprop="servesCuisine" href="/tienda/{{ urltien }}/Pizzas"><span class='icon-pizza4'></span> Pizzas</a></li>
+					{% for otr in res["otros"] %}
+						<li ><a href="/tienda/{{ urltien }}/{{ otr[3] }}">{{ otr[1] }}</a></li>
+					{% endfor %}
+					{% for otrx in res["otrosx"] %}
+						<li><a itemprop="servesCuisine" href="/tienda/{{ urltien }}/{{ otrx[5] }}">{{ otrx[1] }}</a></li>
+					{% endfor %}
+				</ul>
+			</nav>
+		</header>
+		<svg preserveAspectRatio="none" viewBox="0 0 100 100" height="100" width="100%" version="1.1" xmlns="http://www.w3.org/2000/svg" class="bigHalfCircle2">
+			<path d="M0 100 C40 0 60 0 100 100 Z"></path>
+		</svg>
+		<div id="ciudad-anima" class='ciudad-anima'>
+			<div class='tex-ciudad'>
+				<div id="txciu" >
+					<h3>Servicio a Domicilio</h3>
+					<p>Nuestra zona de reparto cubre:</p>
+				</div>
+			</div>
+			<div class="ciudad"></div>
+			<div id="carretera" class="carretera"></div>
+		</div>
+		<section class='contenedor-central'>
+			<div class="linea1">
+				<svg preserveAspectRatio="none" viewBox="0 0 100 100" height="100" width="100%" version="1.1" xmlns="http://www.w3.org/2000/svg" class="bhlinea1">
+					<path d="M0 100 C40 0 60 0 100 100 Z"></path>
+				</svg>
+				<div  class='pedidoonline'>
+					<h2><span class='icon-cart'></span> Haz tu pedido Online</h2>
+					<hr>	
+					<div class='dentro'>
+						<img src='dispositivos3kra.png' />
+						<p>Desde cualquier ordenador, portatil, tablet o smartphone.</p>
+						<p><a itemprop="url" href="/tienda/{{ urltien }}/pedido">CONTINUAR</a></p>
+					</div>
+				</div>
+				<div class="ellogin">
+					{% if errorh %}
+						<div id="errorlog101"></div>
+					{% endif %}
+					{% if not haycli %}
+						<h2>Regístrate</h2>
+						<div class='leyensoc'>con twitter, con facebook, con google plus<br> o con tu email</div>
+						<!--<img src="login3kra.png"/>-->
+						<div class="social">
+							<a href="/tienda/{{ urltien }}/logintwitter" class="social-twitter"><span class='icon-twitter'></span></a>
+							<a href="/tienda/{{ urltien }}/loginfacebook" class="social-facebook"><span class='icon-facebook'></span></a>
+							<div id="customBtn" class="customGPlusSignIn">
+    							<span class="icon"></span>
+  							</div>
+							<!--<a id="customBtn-google" class="social-google"><span></span></a>-->
+						</div>
+						<div id="regis" class="login show">
+							
+							<form id="fcrear">
+								<label for="regema">Email:</label>
+								<input type="email" id="regema" name="regema" required value="" placeholder="email" maxlength="50">
+								<label for="regpas">Contraseña:</label>
+								<input type="password" id="regpas" name="regpas" pattern="[A-Za-z0-9]{6,15}" required title="letras y numeros de 6 a 15 caracteres" value="" maxlength="15">
+								<label for="regrepas">Repite Contraseña:</label>
+								<input type="password" id="regrepas" name="regrepas" pattern="[A-Za-z0-9]{6,15}" required title="letras y numeros de 6 a 15 caracteres" value="" maxlength="15">
+								<p>	
+									<a class='butlog'>¿Ya eres usuario? Login&raquo;</a>
+								</p>
+								<p class='derecha'><button >Enviar</button></p>
+							</form>
+						</div>
+						<div id="login" class="login hidden">
+							
+							<form id="flogin">
+								<label for="logema">Email:</label>
+								<input type="email" id="logema" name="logema"  required value="" placeholder="email" maxlength="50">
+								<label for="logpas">Contraseña:</label>
+								<input type="password" id="logpas" name="lospas" pattern="[A-Za-z0-9]{6,15}" required title="letras y numeros de 6 a 15 caracteres" value="" maxlength="15">
+								<p>
+									<a class='butlog'>¿Olvidaste tu contraseña? Recuperar&raquo;</a><br/>
+									<a class='butlog'>¿Usuario Nuevo? Registrarse&raquo;</a>
+								</p>
+								<p class='derecha'><button >Enviar</button></p>
+							</form>
+						</div>
+						<div id="olvi" class="login hidden">
+							
+							<p>¿Olvidaste la contraseña? Introduce tu email para recuperar tu contraseña.</p>
+							<form id="folvi">
+								<label for="olviema">Email:</label>
+								<input type="email" id="olviema" name="olviema" required value="" placeholder="email" maxlength="50">
+								<p>
+									<a class='butlog'>¿Ya eres usuario? Login&raquo;</a><br/>
+									<a class='butlog'>¿Usuario Nuevo? Registrarse&raquo;</a>
+								</p>
+								<p class='derecha'><button >Enviar</button></p>
+							</form>
+						</div>
+					{% endif %}
+				</div>
+			</div>
+			<div class="linea2">
+				<svg preserveAspectRatio="none" viewBox="0 0 100 100" height="100" width="100%" version="1.1" xmlns="http://www.w3.org/2000/svg" class="bhlinea2">
+					<path d="M0 100 C40 0 60 0 100 100 Z"></path>
+				</svg>
+				{% if res["ofer"]|count > 0 %}
+				<div class="prin3d" itemprop="makesOffer">
+					<h2><span class='icon-gift'></span> Ofertas</h2>
+					<div>
+						<div class="flip3D">
+						  <div id="back" class="back"></div>
+						  <div id="front" class="front"><div class="imarega"> <img src="ofertaskra.png" class="transicion" /></div> </div>
+						</div>
+					</div>
+					<p class='dentro'>
+						<a itemprop="url" href='/tienda/{{ urltien }}/ofertas'>Consulta nuestas Promociones</a>
+					</p>
+				</div>	
+				{% endif %}
+				<div class="servidomi">
+					<h2>Servicio a Domicilio</h2>
+					<hr>
+					<img src="repartidorkra.png"/>
+					<div id="zona-rep" class='aligleft'>
+						<h4>Nuestra Zona de Reparto cubre</h4>
+						<p><strong>Códigos Postales:</strong>
+						{% for c in res["tienda"]["codpos"] -%}
+							<span>{{c}}
+							{%- if not loop.last -%}
+								,
+							{% endif %}
+							</span>
+						{%- endfor %}
+						</p>
+						<p><strong>Municipios:</strong>
+						{% for p in res["tienda"]["poblas"] %}
+							<span>{{p}}
+							{% if not loop.last %}
+								,
+							{%- endif %}
+							</span>
+						{% endfor %}
+						</p>
+					</div>
+				</div>
+			</div>
+			<div class="linea3">
+				<svg preserveAspectRatio="none" viewBox="0 0 100 100" height="100" width="100%" version="1.1" xmlns="http://www.w3.org/2000/svg" class="bhlinea3">
+					<path d="M0 0 C60 150 60 60 100 0 Z"></path>
+				</svg>
+				<div class='dondeest'>
+					<h2><span class='icon-tien'></span> ¿Dónde Estamos?</h2>
+					<hr>
+					<img src="punmatelema2kra.png" />
+					<div class='dondeestamos'>
+						<div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+							<strong><span itemprop="name">{{ res.tienda.nombre }}</span></strong>
+							<span itemprop="streetAddress">{{ res.tienda.calle }}</span>
+		   					<span itemprop="addressLocality">{{ res.tienda.loca }}</span>,
+		   					<span itemprop="postalCode">{{ res.tienda.cdp }}</span> <span itemprop="addressRegion">{{ res.tienda.pro }}</span>,
+		   					<span itemprop="addressCountry">España</span>
+		   				</div>
+		   				<ul>
+			   				<li><a itemprop="telephone" href="tel:{{ res.tienda.tel[0] }}"><span class='icon-tel'></span> {{ res.tienda.tel[0] }}</a></li>
+			  				<li><a itemprop="email" href="mailto:{{ res.tienda.ems[0] }}"><span class='icon-envelope'></span>{{ res.tienda.ems[0] }}</a></li>
+			  			
+			  				<li><div itemprop="location">
+			  					<a  href="/tienda/{{ urltien }}/mapa?dir={{ res.tienda.calle }},{{ res.tienda.cdp }} {{ res.tienda.loca }},{{ res.tienda.pro }}&lon={{ res.tienda.lat }}&lat={{ res.tienda.lon }}" target="_blank" ><span class="icon-mapa"></span> Mapa</a>
+							  	<span class="olvi" itemscope itemtype="http://schema.org/Place">
+								    <div itemprop="geo" >
+										<span itemscope itemtype="http://schema.org/GeoCoordinates">
+											<span property="latitude" content="{{ res.tienda.lon }}"></span>
+											<span property="longitude" content="{{ res.tienda.lat }}"></span>
+										</span>
+								    </div>
+							 	 </span>
+							</div></li>
+							<br class="clear"/>
+						</ul>
+					</div>
+				</div>
+				<div class="horarios">
+					<h2>Horarios</h2>
+					<hr>
+					{% if fechahoy %}
+					
+						<div class="calendario">
+							<div class='calen-dia'>
+								&#10004; {{ diahoy }}
+							</div>
+							<div class='calen-hora'>
+								{{ fechahoy }}
+							</div>
+						</div>
+					
+					{% endif %}
+					<table >
+						{% for h in hdias %}
+							<tr><td class="primera"><span>{{ h.nom }}</span></td><td><time itemprop="openingHours" datetime="{{ h.nomeng }} {{ h.hor }}"> {{ h.hor }}</time></td></tr>
+						{% endfor %}
+						{% for h in hresto %}
+							<tr><td class="primera"><span>{{ h.nom }}</span></td><td><time itemprop="openingHours" datetime="{{ h.nomeng }} {{ h.hor }}"> {{ h.hor }}</time></td></tr>
+						{% endfor %}
+					</table>
+				</div>
+			</div>
+			
+			<svg class="bigTriangleColor" xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100" viewBox="0 0 100 102" preserveAspectRatio="none">
+				<path d="M0 0 L50 100 L100 0 Z"></path>
+			</svg>
+		</section>
+		<footer class='footer'>
+			<svg preserveAspectRatio="none" viewBox="0 0 100 100" height="100" width="100%" version="1.1" xmlns="http://www.w3.org/2000/svg" class="bigHalfCircle">
+				<path d="M0,0 C40,100  60,100 100,0 Z"></path>
+			</svg>
+			<p>
+                <span >2014 © PizzaWeb. Todos los derechos reservados.</span> 
+                <span>PizzaWeb es un proyecto sin ánimo de lucro de <a href="http://twitter.com/@viriwadez" target="_blank">Raúl</a>
+                <!-- <a href="">Políticas de privacidad</a> | <a href="#">Términos del servicio</a> -->
+            	</span>
+        	</p>
+		</footer>
+	</div>
+</body>
+<script src="artissideleft4.js"></script>
+</html>

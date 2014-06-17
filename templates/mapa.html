@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Localización tienda {{ nombre }}</title>
+    <style>
+		html, body, #map-canvas {
+			height: 100%;
+			margin: 0px;
+			padding: 0px
+		}
+		#directions-panel {
+			display: none;
+		}
+		@media screen and (min-width:1000px){
+
+			#directions-panel {
+				height: 100%;
+				float: right;
+				width: 390px;
+				overflow: auto;
+				display: block;
+			}
+
+			#map-canvas {
+				margin-right: 400px;
+			}
+			#control {
+				background: #fff;
+				padding: 5px;
+				font-size: 14px;
+				font-family: Arial;
+				border: 1px solid #ccc;
+				box-shadow: 0 2px 2px rgba(33, 33, 33, 0.4);
+			}
+			
+		}
+		@media print {
+			#map-canvas {
+				height: 500px;
+				margin: 0;
+			}
+
+			#directions-panel {
+				float: none;
+				width: auto;
+			}
+		}
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+    <script>
+var directionsDisplay;
+var directionsService = new google.maps.DirectionsService();
+var start="{{direc}},España" ,end="",botruta,posti,marker,map;
+function initialize() {
+
+	posti=new google.maps.LatLng({{ lat }}, {{ lon }});
+	var mapOptions = {
+		zoom: 14,
+		center: posti
+	};
+	map = new google.maps.Map(document.getElementById('map-canvas'),
+	  mapOptions);
+	if (document.body.offsetWidth>999){
+		directionsDisplay = new google.maps.DirectionsRenderer();
+		directionsDisplay.setMap(map);
+		directionsDisplay.setPanel(document.getElementById('conte-directions-panel'));
+		botruta=document.getElementById("botruta");
+		botruta.onclick=calcRoute;
+	}
+	infowindow = new google.maps.InfoWindow();
+	var image = 'markerdikra.png';
+	marker = new google.maps.Marker({
+				  map: map,
+				  position: posti,
+				  icon: image,
+				  animation: google.maps.Animation.DROP
+			  });
+	google.maps.event.addListener(marker, 'click', toggleBounce);
+	infowindow.setContent("Tienda:<br>"+start+"<br>");
+	
+}
+function toggleBounce() {
+
+	if (marker.getAnimation() != null) {
+		marker.setAnimation(null);
+		infowindow.close();
+	} else {
+		infowindow.open(map, marker);
+		marker.setAnimation(google.maps.Animation.BOUNCE);
+	}
+}
+function calcRoute() {
+	var end2 = document.getElementById('direcdest').value;
+	if (end2.length>10 && end!=end2) {
+		botruta.disabled=true;
+		var request = {
+			origin: posti,
+			destination: end2,
+			travelMode: google.maps.TravelMode.DRIVING
+		};
+		directionsService.route(request, function(response, status) {
+			botruta.disabled=false;
+			if (status == google.maps.DirectionsStatus.OK) {
+				end=end2;
+				directionsDisplay.setDirections(response);
+			}
+		});
+	}
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+  </head>
+  <body>
+	<div id="directions-panel">
+		<div id="control">
+			<h2>Cómo llegar</h2>
+			<label>Direccíon origen:</label>
+			<input id='direcdest' type="text">
+			<button id='botruta'>Calcular</button>
+		</div>
+		<div id="conte-directions-panel"></div>
+	</div>
+	<div id="map-canvas"></div>
+  </body>
+</html>

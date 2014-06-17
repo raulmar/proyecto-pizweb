@@ -1,0 +1,33 @@
+{% extends "/templates/base.html" %}
+{% block articulo %}
+<div class="prearti" id='dsel001HT' itemtype="http://schema.org/SomeProducts">
+	<h1>{{ elotr[1] }}</h1>
+	{% set gru="" %}
+	{% for uo in unotro %}
+		{% if uo[4]!=gru %}
+		{% if gru!="" %} </div> {% endif %}
+		<div>
+		{% if uo[4]!="0" %} <h3>{{ uo[4]|upper() }} </h3> {% endif %}
+			{% set gru=uo[4] %}
+		{% endif %}
+		<div class="btn-articulo">
+			<div class='inte-btn-articulo'>
+				<h2 itemprop="name" >{{ uo[1] }}</h2>
+				{% if uo[5] %}
+				<div class='img-articulo'><img src="{{ uo[5] }}" alt="{{ uo[1] }}" /><button class='mas-articulo'>mas</button></div>
+				<span class='sp-abso-articulo spannover' itemprop="description" >
+				{% else %}
+				<span itemprop="description" class="spanver">
+				{% endif %}
+				{{ uo[2] }}</span>
+			</div>
+			<span><strong itemprop="price">{{ "%.2f"|format(uo[3]) }}€</strong></span>
+			<div class="btn-add-articulo">
+				<select><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+				<button><span class='icon-addshop'></span> Añadir</button>
+			</div>
+		</div>
+	{% endfor %}
+	</div>
+</div>
+{% endblock %}

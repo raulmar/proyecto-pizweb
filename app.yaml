@@ -1,0 +1,45 @@
+application: tienda-usuario
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: true
+
+handlers:
+
+- url: .*/(favicon\.ico)
+  static_files: imagenes/favicon.ico
+  upload: imagenes/favicon.ico
+
+- url: .*/(.*\.(gif|png|jpg))
+  static_files: imagenes/\1
+  upload: /imagenes/(.*\.(gif|png|jpg))
+
+- url: .*/(.*\.css)
+  static_files: css/\1
+  upload: /css/(.*\.css)
+
+- url: .*/(.*\.js)
+  static_files: js/\1
+  upload: /js/(.*\.js)
+
+- url: .*/(.*\.(eot|woff|ttf|svg))
+  static_files: css/iconos2/\1
+  upload: /css/iconos2/(.*\.(eot|woff|ttf|svg))
+
+- url: /(admintienda|usuario)/?.*
+  script: admin_tienda2.app
+  secure: always
+
+- url: /(adminusers)/?.*
+  script: adminUsers.app
+  secure: always
+
+- url: /intranet/?.*
+  script: intranet.app
+
+- url: /tienda/?.*
+  script: tiendadatos_comproofer5.app
+
+libraries:
+- name: jinja2
+  version: latest

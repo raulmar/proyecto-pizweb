@@ -1,0 +1,82 @@
+{% extends "/templates/base.html" %}
+{% block articulo %}
+<div class="marcodom" itemscope itemtype="http://schema.org/ParcelDelivery"  id='dsel001HT'>
+    <h1>Pedido a Domicilio</h1>
+    <div class="dompeddon" >
+        <div>
+            <button class="noselectdom" itemprop="action">
+                <span class="icon-tien"></span>
+                <br>
+                <span class="icon-cancel" ></span>Recoger
+            </button>
+        </div>
+        <div>
+            <button class="selectdom" itemprop="action">
+                <span class="icon-repartidor"></span>
+                <br>
+                <span class="icon-checkmark"></span>Domicilio
+            </button>
+        </div>
+    </div>
+    <h4>
+        <button class="btn btn-info">
+            <span class="icon-tien"></span>Tienda
+            <span class="icon-info"></span>
+        </button>
+    </h4>
+    <div class="datostien animacion dtien-min" itemscope itemtype="http://schema.org/FoodEstablishment">
+        <div>
+            <p>
+                <label>Estamos en:</label>
+                <span itemprop="address" >{{ res.tienda.calle }} , {{ res.tienda.cdp }}  {{ res.tienda.loca }}, {{ res.tienda.pro }}</span>
+                <span class="icon-mapa"></span>mapa
+            </p>
+            <p>
+                <label>
+                    <span class="icon-tel"></span>Teléfono:
+                </label>
+                <a itemprop="telephone" href="tel:{{ res.tienda.tel[0] }}">{{ res.tienda.tel[0] }}</a>
+            </p>
+        </div>
+        <p>
+            {%- if hh["fechahoy"] -%}
+            <label>Hoy {{ hh["diahoy"] }}:</label>
+            <span>{{ hh["fechahoy"] }}</span>
+            {% endif %}
+            <button > horarios »</button>
+        </p>
+        <div class="animacion dtien-min">
+            {% for h in hh["hdias"] -%}
+                 <p>
+                    <label>{{ h.nom }}:</label>
+                    <span><time itemprop="openingHours" datetime="{{ h.nomeng }} {{ h.hor }}"> {{ h.hor }}</time></span>
+                </p>
+            {%- endfor %}
+            {% for h in hh["hresto"] -%}
+                 <p>
+                    <label>{{ h.nom }}:</label>
+                    <span><time itemprop="openingHours" datetime="{{ h.nomeng }} {{ h.hor }}"> {{ h.hor }}</time></span>
+                </p>
+            {%- endfor %}
+        </div>
+        <p>
+            <label>Servicio a Domicilio:</label>
+            <span>Nuestra zona de reparto cubre los códigos postales
+            {% for c in res["tienda"]["codpos"] -%}
+                {{c}}
+                {%- if not loop.last -%}
+                    ,
+                {% endif %}
+            {%- endfor %}
+            en los municipios de
+            {% for p in res["tienda"]["poblas"] -%}
+                {{p}}
+                {%- if not loop.last -%}
+                    ,
+                {% endif %}
+            {%- endfor %}
+            </span>
+        </p>
+    </div>
+</div>
+{% endblock %}

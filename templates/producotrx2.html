@@ -1,0 +1,90 @@
+{% extends "/templates/base.html" %}
+{% block articulo %}
+	<div class="prearti" id='dsel001HT' itemtype="http://schema.org/SomeProducts">
+		<h1>{{ elotrx[1] }}</h1>
+		<h5 class="vlargo">
+			{% if elotrx[4][0]=="Varios" %}
+				Tamaños:</h5>
+				{% for tx in res["tamax"][elotrx[0]] %}
+					<p class="vlargo"><label>{{ tx[1] }}</label><br>Precio Base: <strong>{{ "%.2f"|format(tx[2]) }}</strong>€ | Precio Ing.:<strong>{{ "%.2f"|format(tx[3]) }}</strong>€</p>
+				{% endfor %}
+			{% else %}
+				Tamaño Único:</h5>
+				<label class="vlargo">Precio Base:<strong>{{ "%.2f"|format(elotrx[4][1]) }}</strong>€  | Precio Ing.:<strong>{{ "%.2f"|format(elotrx[4][2]) }}</strong>€</label>
+			{% endif %}
+			{% if elotrx[3]!="No" %}
+				<h5 class="vlargo"> {{ elotrx[3] }}s</h5>
+				<label class="vlargo">
+				{% for sx in res["salsasx"][elotrx[0]|string()] -%}
+					{{ sx[1] }}
+					{%- if not loop.last -%}
+							,
+					{% endif %}
+				{%- endfor %}
+				</label>
+			{% endif %}
+			<h5 class="vlargo">Ingredientes:</h5>
+			<label class="vlargo">
+			{% for ix in res["ingresx"][elotrx[0]|string()] -%}
+				{{ ix[1] }}
+				{%- if not loop.last -%}
+						,
+				{% endif %}
+			{%- endfor %}
+			</label>
+			<hr class="vlargo">
+			<div class="btn-articulo">
+				<h2 itemprop="name" >AL GUSTO</h2>
+				<span itemprop="description" class="spanver">
+					{% if elotrx[4][0]=="Varios" %}
+					Elige Tamaño.<br>
+					{% endif %}
+					{% if elotrx[3]!="No" %}
+					Elige la {{ elotrx[3] }}.<br>
+					{% endif %}
+					Añade los Ingredientes que más te gusten.
+				</span>
+				<div class="btn-add-articulo">
+					<button><span class='icon-addshop'></span> Añadir</button>
+				</div>
+			</div>
+			<br/>
+			{% for uo in res["unotrosx"][elotrx[0]|string()] -%}
+				<div class="btn-articulo">
+					<div class='inte-btn-articulo'>
+						<h2 itemprop="name">{{ uo[1] }}</h2>
+						{%- if uo[5] -%}
+							<div class='img-articulo'><img src="{{ uo[5] }}" alt="{{ uo[1] }}"/><button class='mas-articulo'>mas</button></div>
+							<span class='sp-abso-articulo spannover' itemprop="description" >
+						{%- else -%}
+							<span itemprop="description" class="spanver">
+						{%- endif -%}
+							{%- if elotrx[3]!="No" -%}
+								{{ elotrx[3] }}
+								{%- for sx in res["salsasx"][elotrx[0]|string()] -%}
+									{%- if sx[0]==uo[3] -%}
+										{{ sx[1] }},
+										{%- break -%}
+									{%- endif -%}
+								{%- endfor -%}
+							{%- endif -%}
+							{%- for ii in uo[4] -%}
+								{%- for ix in res["ingresx"][elotrx[0]|string()] -%}
+									{%- if ix[0]==ii -%}
+										{{ ix[1] }}
+										{%- break %}
+									{%- endif -%}
+								{%- endfor -%}
+								{%- if not loop.last -%},{%- endif -%}
+							{%- endfor -%}
+							<br>{{ uo[2] }}
+						</span>
+					</div>
+						<div class="btn-add-articulo">
+							<select><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+							<button><span class='icon-addshop'></span> Añadir</button> <button><span class='icon-edit'></span> Modificar</button>
+						</div>
+				</div>
+			{%- endfor %}
+	</div>
+{% endblock %}

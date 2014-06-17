@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/Restaurant" lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" >
+	<meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1">
+	<title>{{ titulo }} en {{ lugar }}</title>
+	<link rel="shortcut icon" type="image/x-icon"  href="imagenes/favicon.ico" />
+	<link rel="stylesheet"  href="css/normalize.css"/>
+	<link rel="stylesheet"  href="css/online4.css"/>
+	<script src="/tienda/{{ urltien }}/datjson"></script>
+	<script src="js/hUtils.js"></script>
+	<script src="js/___online_ped_ofer2.js"></script>
+	<script src="js/online_clpiotr.js"></script>
+	<script src="js/online_cldom_calc_prin3_produc4.js"></script>
+<script type="text/javascript">
+window.server=window.server || {};
+window.server.sel={{ sel }};
+window.server.seli={{ seli }};
+window.server.hora={{ hora }};
+window.server.hhmm="{{ hhmm }}";
+window.server.singmt="{{ singmt }}";
+</script>
+</head>
+<body>
+<div class="header">
+	<div class="barra-top">
+      	<div class="logo">
+      		<!--<div  class="menures">
+				<button  id="bot-menu" title="Menú" ><span class="icon-menu"></span></button>
+			</div>-->
+	      	<figure itemprop="image" >
+				<a href='/tienda/{{ urltien }}'><img src="{{ nomima }}"></a>
+			</figure>
+		</div>
+      	<div id='nomtienda' class='top-right'>
+      		<span> {{ cliemail }}</span>
+      		<div  class="menures">
+				<button  id="btnsacped" title="Pedido" ><span class="icon-indent-decrease"></span> tu Pedido</button>
+			</div>
+      	</div>
+    </div>
+</div>
+
+
+<div id="main" class='wrapper'>
+	<div id="menuprin" >
+		<ul>
+			<li {% if sel<0 %} class='com-menu-selec' {% else %} class='com-menu-noselec' {% endif %}><a href="/tienda/{{ urltien }}/Pedido" >Datos Pedido</a><span></span></li>
+			<li {% if sel==0 %} class='com-menu-selec' {% else %} class='com-menu-noselec' {% endif %}><a itemprop="servesCuisine" href="/tienda/{{ urltien }}/Pizzas" ><span class='icon-pizza4'></span> Pizzas</a><span></span></li>
+			{% for otr in res["otros"] %}
+				<li {% if sel==2 and otr[0]==seli %} class='com-menu-selec' {% else %} class='com-menu-noselec' {% endif %}><a href="/tienda/{{ urltien }}/{{ otr[3] }}" >{{ otr[1] }}</a><span></span></li>
+			{% endfor %}
+			{% for otrx in res["otrosx"] %}
+				<li {% if sel==3 and otrx[0]==seli %} class='com-menu-selec' {% else %} class='com-menu-noselec' {% endif %}><a itemprop="servesCuisine" href="/tienda/{{ urltien }}/{{ otrx[5] }}" >{{ otrx[1] }}</a><span></span></li>
+			{% endfor %}
+			{% if res["ofer"]|count > 0 %}
+				<li {% if sel==1 %} class='com-menu-selec' {% else %} class='com-menu-noselec' {% endif %}><a  href="/tienda/{{ urltien }}/ofertas"><span class="icon-gift"  ></span> Ofertas</a><span></span></li>
+			{% endif %}
+			<br class="clear"/>	
+		</ul>
+	</div>
+	<div id='conpedido' class="nooculto"></div>
+		<div id='conarticulos' >{% block articulo %}{% endblock %}
+</div></body></html>
