@@ -1,2 +1,8 @@
 $ cat .gitignore
+*.pyc
+/modulospy/*.pyc
 /modulospy/claves.py
+/modelos/*.pyc
+/css/iconos2/
+/imagenes/
+

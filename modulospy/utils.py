@@ -27,7 +27,7 @@ def slug(ca):
 
 #en vez de __file__ utilizamos directamente C:\Users\Viri\Proyectos Gae\Proyectos GAE Python3\tienda_usuario
 jinja_environment = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(os.path.normpath("C:\Users\Viri\Proyectos Gae\Proyectos GAE Python3\\tienda_usuario")),extensions=['jinja2.ext.loopcontrols'],trim_blocks=True)
+    loader=jinja2.FileSystemLoader(os.path.normpath("C:\Users\Viri\Proyectos Gae\Proyectos GAE Python3\\proyecto-pizweb")),extensions=['jinja2.ext.loopcontrols'],trim_blocks=True)
 """jinja_environment.filters.update({
         'slug': slug
         })"""

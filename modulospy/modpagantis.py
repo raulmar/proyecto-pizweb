@@ -10,7 +10,7 @@ from google.appengine.api import urlfetch
 from webapp2_extras import sessions
 from google.appengine.api import memcache
 from modelos import todosmodelos
-from modulospy import datosTienda,utils
+from modulospy import utils
 
 """def segundos():
 	hoy=datetime.datetime.now()
