@@ -210,91 +210,33 @@ class ComprobarOferta(utils.BaseHandler):
 		#self.artsdet=dict(self.objjson["detalle"])
 		resul=self.comprobar_pedido(pedidoen)
 		if not resul[0]:
-			self.resjsonerror("algo mal resul0=%s" % resul[0])
-		elif not str(resul[1])==str(impor):
-			self.resjsonerror("importes no coinciden impor=%f, resul1=%f" % (impor,resul[1]))
+			self.resjsonerror("algo mal resul0=%s" % resul[1])
 		else:
-			#resul[2]["predefi"]=resul[1]
-			#self.session["pedido"]=resul[2]
-			#if okpay or okpagan:
-			"""sesped=self.session.get("pedido")
-			if sesped and sesped.get("detallemio") == detp and self.session.get("ec_token"):
-				regtra=todosmodelos.Transferencia.query(todosmodelos.Transferencia.token_ec==self.session.get("ec_token")).get()
-				if regtra:
-					if regtra.estado=="created" or regtra.estado=="canceled":
-						self.session["pedido"]["datped"]=datped
-						self.resjsonok("redirect",resto=regtra.redirect) 
-						#self.session.get("redirect"))
-						return
-					elif regtra.estado=="approved":
-						self.resjsonerror("Este pedido ya ha sido completado con Paypal.")
-						return"""
-			self.session["pedido"]={"detallemio":detp,"datped":datped,"detalleapi":resul[2] }
-			self.resjsonok("ok",resto={"detalle":resul[2],"predefi":resul[1],"paypal":okpay,"pagantis":okpagan})
-			#else:
-			#	self.resjsonok("ok",resto={"resul":resul[1],"enviado":"pedido enviado no hay pago paypal"})
+			auxpre1= "%.2f" % resul[1]
+			auxpre2= "%.2f" % impor
+			if not auxpre1==auxpre2:
+				self.resjsonerror("importes no coinciden impor=%s, resul1=%s" % (auxpre2,auxpre1))
 			return
-			"""kcli=None
-			clire=self.session.get('cliente')
-			grabcli=False
-			if clire:
-				if not clire["tienda"] == self.reslisjson[1]:
-					#if clire["tipo"]=="bd":
-						#user=todosmodelos.Clientes(parent=self.reslisjson[1],email=clire["usu"].email,password=clire.password,validada=True,numpedidos=1,ultimopedido=self.objjson["horaped"])
-						#kcli=user.put()
-					#else:
-					if not clire["tipo"] == "bd":
-						user = todosmodelos.Clientes.query(todosmodelos.Clientes.idsocial==clire["usu"].idsocial,ancestor=self.reslisjson[1]).get()
-						if not user:
-							user=todosmodelos.Clientes(parent=self.reslisjson[1],email=clire['usu'].email,idsocial=clire["usu"].idsocial,validada=True,numpedidos=1,ultimopedido=self.objjson["horaped"])
-							kcli=user.put()
-						else:
-							grabcli=True
-							kcli=user.key
-				else:
-					grabcli=True
-					user=clire["usu"]
-					kcli=user.key
-					
-				self.objjson["cliente"] ={'em':kcli.email,'id':kcli.key.id()}
-			#url="http://127.0.0.1:8080/url?pedido=pedido"
-			url="http://"+self.res["tienda"]["url"]+":8080/url?pedido=pedido"
-			datped["pago"]=1
-			try:
-				result = urlfetch.fetch(url=url,
-				    payload="empiezapor="+json.dumps(self.objjson,ensure_ascii=False),
-				    method=urlfetch.POST,
-				    headers={'Content-Type': 'application/json'},validate_certificate=False)
-			except Exception as e:
-					self.resjsonerror(e.message)
+		#resul[2]["predefi"]=resul[1]
+		#self.session["pedido"]=resul[2]
+		#if okpay or okpagan:
+		"""sesped=self.session.get("pedido")
+		if sesped and sesped.get("detallemio") == detp and self.session.get("ec_token"):
+			regtra=todosmodelos.Transferencia.query(todosmodelos.Transferencia.token_ec==self.session.get("ec_token")).get()
+			if regtra:
+				if regtra.estado=="created" or regtra.estado=="canceled":
+					self.session["pedido"]["datped"]=datped
+					self.resjsonok("redirect",resto=regtra.redirect) 
+					#self.session.get("redirect"))
 					return
-					#ok="error"
-					#resto=e.message
-			if result.status_code == 200:
-				ok="si"
-				resto=json.loads(cgi.escape(result.content))
-				#self.resjsonerror(str(result.status_code)+"....uu....="+result.content)
-				#return
-				
-				if pedidoen>1:
-					canom=todosmodelos.CalleNom(nom=self.objjson["callenom"]["nom"],via=self.objjson["callenom"]["via"],num=self.objjson["callenom"]["num"],bloq=self.objjson["callenom"]["bloq"],piso=self.objjson["callenom"]["piso"],esca=self.objjson["callenom"]["esca"],letra=self.objjson["callenom"]["letra"],muni=self.objjson["callenom"]["muni"])
-				else:
-					canom=None
-				pedido=todosmodelos.Pedido(parent=self.reslisjson[1],pedidoen=pedidoen,cliente=kcli,numped=int(resto["numped"]),telefono=tele,callenom=canom,importe=impor,horapedido=self.objjson["horaped"],horaent=horaent2,comen=self.objjson["comen"],detalle=resul[1])
-				okped=pedido.put()
-				if okped and kcli and grabcli:
-					user.get()
-					nped=user.numpedidos+1
-					user.populate(ultimopedido=self.objjson["horaped"],numpedidos=nped)
-					user.put()
-
-			else:
-				self.resjsonerror(str(result.status_code)+"....uu....="+result.content)
-				return
-				#ok="no"
-				#resto=str(result.status_code)+"="+result.content
-			self.resjsonok(ok,resto=resto)
-			#self.response.out.write(json.dumps({"ok":ok,"resto":resto}))"""
+				elif regtra.estado=="approved":
+					self.resjsonerror("Este pedido ya ha sido completado con Paypal.")
+					return"""
+		self.session["pedido"]={"detallemio":detp,"datped":datped,"detalleapi":resul[2] }
+		self.resjsonok("ok",resto={"detalle":resul[2],"predefi":resul[1],"paypal":okpay,"pagantis":okpagan})
+		#else:
+		#	self.resjsonok("ok",resto={"resul":resul[1],"enviado":"pedido enviado no hay pago paypal"})
+		return
 
 	def existeen(self,va,dat):
 		for v in va:
@@ -716,8 +658,10 @@ class ComprobarOferta(utils.BaseHandler):
 						prefi+=preof
 						impt+=mipre
 				impt+=esprefi-minprepro+maxprepro	
-				if not (impt+mio[14])==prefi:
-					return (False,"oferta ( %s ) no coinciden precios tiene %f y debe tener %f, %s" % (mio[1],prefi,(impt+mio[14]),lmipre))
+				auxpre1= "%.2f" % (impt+mio[14])
+				auxpre2= "%.2f" % prefi
+				if not auxpre1 == auxpre2:
+					return (False,"oferta ( %s ) no coinciden precios tiene %f y debe tener %f, %s" % (mio[1],auxpre2,auxpre1,lmipre))
 				detlis.append({"articulo":1000,"ofertaid":int(idofer),"nomofer":nombreoferta,"prereal":prereal,"descuento":prereal-prefi,"totofer":prefi} )
 				predef+=prefi
 			else:
@@ -727,8 +671,10 @@ class ComprobarOferta(utils.BaseHandler):
 				if not comp["ok"]:
 					return (False,comp["error"])
 				pre=comp["precio"]*ar["det"]["canti"]
-				if not ar["preart"] == pre:
-					return (False,u"No coinciden precios en producto %s tiene %f y debe tener %f" % (comp["nombre"],ar["preart"],pre))
+				auxpre1= "%.2f" % ar["preart"]
+				auxpre2= "%.2f" % pre
+				if not auxpre1 == auxpre2:
+					return (False,u"No coinciden precios en bbb2222 producto %s tiene %s y debe tener %s" % (comp["nombre"],auxpre1,auxpre2))
 				predef+=pre
 				detlis.append({"articulo":int(ar["articulo"]),"det":ar["det"],"preart":float(ar["preart"]),"nombre":comp["nombre"],"cant":ar["det"]["canti"],"preu":comp["precio"]} )
 				#detlis.append(todosmodelos.Detalle(articulo=int(ar["articulo"]),det=ar["det"],preart=float(ar["preart"])) )

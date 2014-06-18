@@ -30,7 +30,7 @@ fapermisos="email"
 
 
 def getcredentials():
-	credentials = "%s:%s" % (urllib.quote(claves.consumer_key.encode('utf-8'),""), urllib.quote(consumer_secret.encode('utf-8'),""))
+	credentials = "%s:%s" % (urllib.quote(claves.consumer_key.encode('utf-8'),""), urllib.quote(claves.consumer_secret.encode('utf-8'),""))
 	return base64.b64encode(credentials)
 
 def percent_encode(k,v):
@@ -44,10 +44,10 @@ def getFirma(u,h,nonce,tok,ov=None):
 	#Creating a signature:
 	if not ov == None:
 		parametros_string="%s&%s&%s&%s&%s&%s&%s" % (sin_percent_encode("oauth_consumer_key",claves.consumer_key ),sin_percent_encode("oauth_nonce",nonce),sin_percent_encode("oauth_signature_method","HMAC-SHA1"),sin_percent_encode("oauth_timestamp",h),sin_percent_encode("oauth_token",tok),sin_percent_encode("oauth_verifier",ov),sin_percent_encode("oauth_version","1.0"))
-		Signing_key="%s&%s" % ( urllib.quote(consumer_secret,""),urllib.quote(tok,""))
+		Signing_key="%s&%s" % ( urllib.quote(claves.consumer_secret,""),urllib.quote(tok,""))
 	else:
 		parametros_string="%s&%s&%s&%s&%s&%s" % (sin_percent_encode("oauth_callback",tok ),sin_percent_encode("oauth_consumer_key",claves.consumer_key ),sin_percent_encode("oauth_nonce",nonce),sin_percent_encode("oauth_signature_method","HMAC-SHA1"),sin_percent_encode("oauth_timestamp",h),sin_percent_encode("oauth_version","1.0"))
-		Signing_key="%s&" %  urllib.quote(consumer_secret.encode('utf-8'),"")
+		Signing_key="%s&" %  urllib.quote(claves.consumer_secret.encode('utf-8'),"")
 	Firma_string="POST&%s&%s" % (urllib.quote(u,""),urllib.quote(parametros_string,""))
 
 	hash1 = hmac.new( Signing_key,Firma_string, hashlib.sha1).digest()
@@ -60,7 +60,7 @@ def getFirma(u,h,nonce,tok,ov=None):
 class loginfacebook(utils.BaseHandler):
 	@utils.tienda_required
 	def get(self, *args, **kwargs):
-		self.redirect("https://www.facebook.com/dialog/oauth?client_id=%s&redirect_uri=%s&response-type=%s&scope=%s" % (claves.faapp_id,self.uri_for('returnurlface', nom_tien=self.res["tienda"]["nombre"], _full=True),fatipores,fapermisos ))
+		self.redirect("https://www.facebook.com/dialog/oauth?client_id=%s&redirect_uri=%s&response-type=%s&scope=%s" % (claves.faapp_id,self.uri_for('returnurlface', nom_tien=self.res["tienda"]["url_tien"], _full=True),fatipores,fapermisos ))
 
 class returnurlHandlerface(utils.BaseHandler):
 	@utils.tienda_required
@@ -87,7 +87,7 @@ class returnurlHandlerface(utils.BaseHandler):
 				self.getInforUsu(hayusu.get("usu-id"),adto)
 				return
 
-		req_uri="https://www.facebook.com/dialog/oauth?client_id=%s&redirect_uri=%s&response-type=%s&scope=%s" % (claves.faapp_id,self.uri_for('returnurlface', nom_tien=self.res["tienda"]["nombre"], _full=True),fatipores,fapermisos )
+		req_uri="https://www.facebook.com/dialog/oauth?client_id=%s&redirect_uri=%s&response-type=%s&scope=%s" % (claves.faapp_id,self.uri_for('returnurlface', nom_tien=self.res["tienda"]["url_tien"], _full=True),fatipores,fapermisos )
 		u="https://graph.facebook.com/oauth/access_token?client_id=%s&redirect_uri=%s&client_secret=%s&code=%s" % (claves.faapp_id, req_uri,claves.faapp_secret,code_parameter)
    		try:
 			result = urlfetch.fetch(url=u,
@@ -214,7 +214,7 @@ class baseTwitter(utils.BaseHandler):
 		u2="https://api.twitter.com/1.1/account/verify_credentials.json"
 		parametros_string="%s&%s&%s&%s&%s&%s" % (sin_percent_encode("oauth_consumer_key",claves.consumer_key ),sin_percent_encode("oauth_nonce",nonce2),sin_percent_encode("oauth_signature_method","HMAC-SHA1"),sin_percent_encode("oauth_timestamp",h2),sin_percent_encode("oauth_token",oat2),sin_percent_encode("oauth_version","1.0"))
 
-		uno=urllib.quote(consumer_secret.encode('utf-8'),"")
+		uno=urllib.quote(claves.consumer_secret.encode('utf-8'),"")
 		dos=urllib.quote(aot2sec.encode('utf-8'),"")
 		Signing_key="%s&%s" % ( uno,dos)
 		Firma_string="GET&%s&%s" % (urllib.quote(u2,""),urllib.quote(parametros_string,""))
@@ -266,11 +266,15 @@ class baseTwitter(utils.BaseHandler):
 						clien.email=usu["email"]
 						clien.put_async()
 			self.session['cliente']= {'tipo':"tw","usu":clien,"avatar":usu["profile_image_url"],"nombre":"%s (<a href='https://twitter.com/@%s' target='_blank'>@%s</a>)" % (usu["name"],usu["screen_name"],usu["screen_name"]), "tienda":self.restikey}
+			mitz=utils.USOHORARIO[self.res["tienda"]["usohorario"]]()
 			return (True,{
 				'sel':-1,
 	            'seli':-1,
 	            'hora':int(time.time()*1000),
-	            'hh':utils.fhorario(self.res)
+	            'hh':utils.fhorario(self.res),
+	            'hhmm':datetime.datetime.now(mitz).strftime("%Y:%m:%d:%H:%M"),
+	            "singmt":datetime.datetime.now().strftime("%Y:%m:%d:%H:%M"),
+	            'titulo':"Pedido online a Domicilio y para Recoger de %s" % self.res["tienda"]["nombre"]
 	           })
 			#return (True, u"ok en returnurlHandler obtener credenciales content=%s" % result2.content)
 		else:
@@ -292,7 +296,7 @@ class logintwitter(baseTwitter):
 			u="https://api.twitter.com/oauth/request_token"
 			h=dame_hora()
 			nonce=nuevo_nonce()
-			callback_url=self.uri_for('returnurltw', nom_tien=self.res["tienda"]["nombre"], _full=True)
+			callback_url=self.uri_for('returnurltw', nom_tien=self.res["tienda"]["url_tien"], _full=True)
 			fir=getFirma(u,h,nonce,callback_url)
 			cabecera_string="OAuth %s=\"%s\", %s=\"%s\", %s=\"%s\", %s=\"%s\", %s=\"%s\", %s=\"%s\", %s=\"%s\"" % (
 				urllib.quote("oauth_callback"),urllib.quote(callback_url.encode('utf-8'),""),
@@ -419,6 +423,7 @@ class returnurlHandlertw(baseTwitter):
 				resinf=self.getInforUsuTw(mijson["oauth_token"],mijson["oauth_token_secret"],True)
 				if (resinf[0]):
 					self.session["tw-usuario"]={"oauth": mijson["oauth_token"], "token_secret":mijson["oauth_token_secret"] }
+					
 					self.render_tplt('/templates/pedidoa.html',resinf[1])
 				else:
 					self.render_tplt('/templates/unatienindex7.html',{'errorh':resinf[1]})

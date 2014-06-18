@@ -243,22 +243,26 @@ class BaseHandler(respuesta):
 					#else:
 					if not clire["tipo"] == "bd":
 						user = todosmodelos.Clientes.query(todosmodelos.Clientes.idsocial==clire["usu"].idsocial,ancestor=tikey).get()
+
 						if not user:
 							user=todosmodelos.Clientes(parent=tikey,email=clire['usu'].email,idsocial=clire["usu"].idsocial,validada=True,numpedidos=1,ultimopedido=datped["horaped"])
 							kcli=user.put()
-							pedido["cliente"] ={'id':kcli.id(),'nuevo':True,'usu':clire.usu,'tipo':clire.tipo,'avatar':clire.avatar,'nombre':clire.nombre}
+							usudic={"ultimopedido":datped["horaped"],"idsocial":clire["usu"].idsocial,"numpedidos":1,'email':clire['usu'].email}
+							pedido["cliente"] ={'id':kcli.id(),'nuevo':True,'usu':usudic,'tipo':clire["tipo"],'avatar':clire["avatar"],'nombre':clire["nombre"]}
 						else:
 							grabcli=True
 							kcli=user.key
-							pedido["cliente"] ={'id':kcli.id(),'usu':clire.usu,'tipo':clire.tipo,'avatar':clire.avatar,'nombre':clire.nombre}
+							usudic={"ultimopedido":user.ultimopedido,"idsocial":user.idsocial,"numpedidos":user.numpedidos,'email':user.email }
+							pedido["cliente"] ={'id':kcli.id(),'usu':usudic,'tipo':clire["tipo"],'avatar':clire["avatar"],'nombre':clire["nombre"]}
 				else:
 					grabcli=True
 					user=clire["usu"]
 					kcli=user.key
+					usudic={"ultimopedido":user.ultimopedido,"idsocial":user.idsocial,"numpedidos":user.numpedidos,'email':user.email }
 					if not clire["tipo"] == "bd":
-						pedido["cliente"] ={'id':kcli.id(),'usu':clire.usu,'tipo':clire.tipo,'avatar':clire.avatar,'nombre':clire.nombre}
+						pedido["cliente"] ={'id':kcli.id(),'usu':usudic,'tipo':clire["tipo"],'avatar':clire["avatar"],'nombre':clire["nombre"]}
 					else:
-						pedido["cliente"] ={'id':kcli.id(),'usu':clire.usu,'tipo':"bd"}
+						pedido["cliente"] ={'id':kcli.id(),'usu':usudic,'tipo':"bd"}
 			try:
 				result = urlfetch.fetch(url=url,
 				    payload=json.dumps(pedido),

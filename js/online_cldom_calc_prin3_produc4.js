@@ -303,7 +303,7 @@ var CldatDom=(function(){
 				datos.horaent=he.getTime();
 			}else
 				datos.horaent=haux.getTime();
-			datos.dif_hped_hent=haux.getTime() - datos.horaped;// datos.horaent-haux.getTime();
+			datos.dif_hped_hent=datos.horaent - datos.horaped;// datos.horaent-haux.getTime();
 
 			var horaentaux=new Date(datos.horaent), hopaux=new Date(datos.horaped);
 			horaentaux=hora_min_full(horaentaux.getHours())+":"+hora_min_full(horaentaux.getMinutes());

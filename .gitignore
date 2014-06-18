@@ -1,5 +1,7 @@
 $ cat .gitignore
 *.pyc
+pizweb.sublime-project
+pizweb.sublime-workspace
 /modulospy/*.pyc
 /modulospy/claves.py
 /modelos/*.pyc
