@@ -5,7 +5,7 @@ from google.appengine.api import mail
 import logging
 import json
 import cgi
-from google.appengine.api import memcache
+#from google.appengine.api import memcache
 from modelos import todosmodelos
 from modulospy import utils
 
@@ -30,7 +30,8 @@ class SignupHandler(utils.respuesta):
 		if len(nomtien)<2:
 			self.resjsonerror('No hay tienda en url')
 			return
-		ti=memcache.get(nomtien.upper()+"key")
+		ti=utils.getMemKeyTienda(nomtien)
+		#ti=memcache.get(nomtien.upper()+"key")
 		if not ti:
 			ti=todosmodelos.Tienda.query(todosmodelos.Tienda.nombreupper==nomtien.upper()).get()
 			if not ti:
@@ -79,7 +80,8 @@ class LoginHandler(utils.BaseHandler):
 		if len(nomtien)<2:
 			self.resjsonerror('No hay tienda en url')
 			return
-		ti = memcache.get(nomtien.upper()+"key")
+		ti=utils.getMemKeyTienda(nomtien);
+		#ti = memcache.get(nomtien.upper()+"key")
 		if not ti:
 			ti=todosmodelos.Tienda.query(todosmodelos.Tienda.nombreupper==nomtien.upper()).get()
 			if not ti:
@@ -111,7 +113,8 @@ class ForgotPasswordHandler(utils.respuesta):
 		if len(nomtien)<2:
 			self.resjsonerror('No hay tienda en url')
 			return
-		ti = memcache.get(nomtien.upper()+"key")
+		ti=utils.getMemKeyTienda(nomtien);
+		#ti = memcache.get(nomtien.upper()+"key")
 		if not ti:
 			ti=todosmodelos.Tienda.query(todosmodelos.Tienda.nombreupper==nomtien.upper()).get()
 			if not ti:
@@ -159,7 +162,8 @@ class VerificationHandler(utils.BaseHandler):
 		if len(nomtien)<2:
 			utils.handle_404(self.request, self.response, {"status_int":404,"status":"No hay tienda en url"})
 			return
-		ti = memcache.get(nomtien.upper()+"key")
+		ti=utils.getMemKeyTienda(nomtien);
+		#ti = memcache.get(nomtien.upper()+"key")
 		tienti=None
 		if not ti:
 			tienti=todosmodelos.Tienda.query(todosmodelos.Tienda.nombreupper==nomtien.upper()).get()

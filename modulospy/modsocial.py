@@ -56,13 +56,23 @@ def getFirma(u,h,nonce,tok,ov=None):
 	#return base64.b64encode(hash1)
 	return binascii.b2a_base64(hash1)[:-1]
 
+class pageErrorSocial(utils.BaseHandler):
+	def devolPagError(self,strerror):
+		hh=utils.fhorario(self.res)
+		mpros="Pizzas"
+		for i in self.res["otros"]:
+			mpros+=", %s" % i[1]
+		for i in self.res["otrosx"]:
+			mpros+=", %s" % i[1]
+		template_values = {"fechahoy":hh["fechahoy"],"diahoy":hh["diahoy"],"hdias":hh["hdias"],"hresto":hh["hresto"],'titulo':"Pide %s a Domicilio y para Recoger por Internet. Ofertas exclusivas - de %s" % (mpros,self.res["tienda"]["nombre"]),'errorh':strerror }
+		self.render_tplt('/templates/unatienindex7.html',template_values)
 
 class loginfacebook(utils.BaseHandler):
 	@utils.tienda_required
 	def get(self, *args, **kwargs):
 		self.redirect("https://www.facebook.com/dialog/oauth?client_id=%s&redirect_uri=%s&response-type=%s&scope=%s" % (claves.faapp_id,self.uri_for('returnurlface', nom_tien=self.res["tienda"]["url_tien"], _full=True),fatipores,fapermisos ))
 
-class returnurlHandlerface(utils.BaseHandler):
+class returnurlHandlerface(pageErrorSocial):
 	@utils.tienda_required
 	def get(self, *args, **kwargs):
 
@@ -70,13 +80,14 @@ class returnurlHandlerface(utils.BaseHandler):
 		if not code_parameter:
 			error=self.request.get('error')
 			if error:
-				template_values={ 'errorh':u'error_reason:%s, error_description:%s' % ( self.request.get('error_reason'),self.request.get('error_description')) }
+				strerror=u'error_reason:%s, error_description:%s' % ( self.request.get('error_reason'),self.request.get('error_description'))
 				
 				#self.reponse.write(u'error_reason:%s, error_description:%s' % ( self.request.get('error_reason'),self.request.get('error_description')))
 			else:
-				template_values={ 'errorh':"mmmmmmmmno recibo code_parameter"  }
+				strerror="mmmmmmmmno recibo code_parameter"
 				#self.response.out.write("mmmmmmmmno recibo code_parameter" )
-			self.render_tplt('/templates/unatienindex7.html',template_values)
+			self.devolPagError(strerror)
+			#self.render_tplt('/templates/unatienindex7.html',template_values)
 			return
 		adto="%s|%s" % (claves.faapp_id,claves.faapp_secret)
 		hayusu=self.session and self.session.get("fb-usuario")
@@ -94,7 +105,8 @@ class returnurlHandlerface(utils.BaseHandler):
 						    method=urlfetch.GET,
 						    validate_certificate=False)
 		except Exception as e:
-			self.render_tplt('/templates/unatienindex7.html',{'errorh':u" exception en pedir token en returnurlHandlerface : %s" % e.message})
+			self.devolPagError(u" exception en pedir token en returnurlHandlerface : %s" % e.message)
+			#self.render_tplt('/templates/unatienindex7.html',{'errorh':u" exception en pedir token en returnurlHandlerface : %s" % e.message})
 			#self.response.out.write(u" exception en pedir token en returnurlHandlerface : %s" % e.message)
 			return
 		#access_token={access-token}&expires={seconds-til-expiration}
@@ -113,7 +125,8 @@ class returnurlHandlerface(utils.BaseHandler):
 								    method=urlfetch.GET,
 								    validate_certificate=False)
 				except Exception as e:
-					self.render_tplt('/templates/unatienindex7.html',{'errorh':u" exception en depurar token en returnurlHandlerface : %s" % e.message})
+					self.devolPagError(u" exception en depurar token en returnurlHandlerface : %s" % e.message)
+					#self.render_tplt('/templates/unatienindex7.html',{'errorh':u" exception en depurar token en returnurlHandlerface : %s" % e.message})
 					#self.response.out.write(u" exception en depurar token en returnurlHandlerface : %s" % e.message)
 					return
 				if result.status_code == 200:
@@ -123,16 +136,20 @@ class returnurlHandlerface(utils.BaseHandler):
 					if ("data" in resjson) and ("user_id" in resjson["data"]):
 						self.getInforUsu(resjson["data"]["user_id"],adto,mijson)
 					else:
-						self.render_tplt('/templates/unatienindex7.html',{'errorh':"ok en depurar token no hay data en  content=%s" % result.content})
+						self.devolPagError("ok en depurar token no hay data en  content=%s" % result.content)
+						#self.render_tplt('/templates/unatienindex7.html',{'errorh':"ok en depurar token no hay data en  content=%s" % result.content})
 						#self.response.out.write("ok en depurar token no hay data en  content=%s" % result.content)
 				else:
-					self.render_tplt('/templates/unatienindex7.html',{'errorh':"ok en obtener token en returnurlHandlerface, pero mal depurar token content=%s, token expira en=%d" % (result.content,mijson["expires"]) })
+					self.devolPagError("ok en obtener token en returnurlHandlerface, pero mal depurar token content=%s, token expira en=%d" % (result.content,mijson["expires"]))
+					#self.render_tplt('/templates/unatienindex7.html',{'errorh':"ok en obtener token en returnurlHandlerface, pero mal depurar token content=%s, token expira en=%d" % (result.content,mijson["expires"]) })
 					#self.response.out.write("ok en obtener token en returnurlHandlerface, pero mal depurar token content=%s, token expira en=%d" % (result.content,mijson["expires"]) )
 			else:
-				self.render_tplt('/templates/unatienindex7.html',{'errorh':"mal al obtener token en returnurlHandlerface content=%s, no hay access_token o expires" % result.content})
+				self.devolPagError("mal al obtener token en returnurlHandlerface content=%s, no hay access_token o expires" % result.content)
+				#self.render_tplt('/templates/unatienindex7.html',{'errorh':"mal al obtener token en returnurlHandlerface content=%s, no hay access_token o expires" % result.content})
 				#self.response.out.write("mal al obtener token en returnurlHandlerface content=%s, token expira en=%d" % (result.content,mijson["expires"]) )
 		else:
-			self.render_tplt('/templates/unatienindex7.html',{'errorh':"mal  en obtener token en returnurlHandlerface <p> status code=%d</p><p>content=%s</p>" % (result.status_code, result.content)})
+			self.devolPagError("mal  en obtener token en returnurlHandlerface <p> status code=%d</p><p>content=%s</p>" % (result.status_code, result.content))
+			#self.render_tplt('/templates/unatienindex7.html',{'errorh':"mal  en obtener token en returnurlHandlerface <p> status code=%d</p><p>content=%s</p>" % (result.status_code, result.content)})
 			#self.response.out.write("mal  en obtener token en returnurlHandlerface no hay access_token o expires <p> status code=%d</p><p>content=%s</p>" % (result.status_code, result.content) )
 
 	@todosmodelos.ndb.toplevel
@@ -143,7 +160,8 @@ class returnurlHandlerface(utils.BaseHandler):
 						    method=urlfetch.GET,
 						    validate_certificate=False)
 		except Exception as e:
-			self.render_tplt('/templates/unatienindex7.html',{'errorh':u" exception en obtener informacion de usuario %s: %s" % (idusu,e.message)})
+			self.devolPagError(u" exception en obtener informacion de usuario %s: %s" % (idusu,e.message))
+			#self.render_tplt('/templates/unatienindex7.html',{'errorh':u" exception en obtener informacion de usuario %s: %s" % (idusu,e.message)})
 			#self.response.out.write(u" exception en obtener informacion de usuario %s: %s" % (idusu,e.message))
 			return
 		if result.status_code == 200:
@@ -194,19 +212,24 @@ class returnurlHandlerface(utils.BaseHandler):
 						clien.email=usu["email"]
 						clien.put_async()
 			self.session['cliente']= {'tipo':"fa","usu":clien,"avatar":usu["picture"]["data"]["url"],"nombre":"<a href='https://www.facebook.com/' target='_blank'>%s</a>" % usu["name"], "tienda":self.restikey}
+			mitz=utils.USOHORARIO[self.res["tienda"]["usohorario"]]()
 			self.render_tplt('/templates/pedidoa.html',{
 				'sel':-1,
 	            'seli':-1,
 	            'hora':int(time.time()*1000),
-	            'hh':utils.fhorario(self.res)
+	            'hh':utils.fhorario(self.res),
+	            'hhmm':datetime.datetime.now(mitz).strftime("%Y:%m:%d:%H:%M"),
+	            "singmt":datetime.datetime.now().strftime("%Y:%m:%d:%H:%M"),
+	            'titulo':"Pedido online a Domicilio y para Recoger de %s" % self.res["tienda"]["nombre"]
 	           })
 			#self.response.out.write(u"%s %s:<p> <img src=\"%s\" /></p>" % (men,usu,usu["picture"]["data"]["url"]))
 			#self.response.out.write("ok en obtener informacion de usuario %s:<p> content=%s</p>" % (resjson["data"]["user_id"],result.content))
 		else:
-			self.render_tplt('/templates/unatienindex7.html',{'errorh':"mal en obtener informacion de usuario %s:<p> status_code=%d</p>" % (idusu,result.status_code)})
+			self.devolPagError("mal en obtener informacion de usuario %s:<p> status_code=%d</p>" % (idusu,result.status_code))
+			#self.render_tplt('/templates/unatienindex7.html',{'errorh':"mal en obtener informacion de usuario %s:<p> status_code=%d</p>" % (idusu,result.status_code)})
 			#self.response.out.write("mal en obtener informacion de usuario %s:<p> status_code=%d</p>" % (idusu,result.status_code))
 
-class baseTwitter(utils.BaseHandler):
+class baseTwitter(pageErrorSocial):
 	@todosmodelos.ndb.toplevel
 	def getInforUsuTw(self,oat2,aot2sec,nose):
 		nonce2=nuevo_nonce()
@@ -289,7 +312,8 @@ class logintwitter(baseTwitter):
 			if resinf[0]==True:
 				self.render_tplt('/templates/pedidoa.html',resinf[1])
 			else:
-				self.render_tplt('/templates/unatienindex7.html',{'errorh':resinf[1]})
+				self.devolPagError(resinf[1])
+				#self.render_tplt('/templates/unatienindex7.html',{'errorh':resinf[1]})
 			return
 		fir="nana"
 		if self.getAccesToken():
@@ -308,7 +332,8 @@ class logintwitter(baseTwitter):
 				#urllib.quote("oauth_token"),urllib.quote(self.access_token,""),
 				urllib.quote("oauth_version"),urllib.quote("1.0".encode('utf-8')))
 		else:
-			self.render_tplt('/templates/unatienindex7.html',{'errorh':self.error})
+			self.devolPagError(self.error)
+			#self.render_tplt('/templates/unatienindex7.html',{'errorh':self.error})
 			#self.response.out.write(self.error)
 			return
 		#self.response.out.write(u"cabecera=%s<br> nonc=%s" % (cabecera_string,nonce))
@@ -322,13 +347,14 @@ class logintwitter(baseTwitter):
 						    "Authorization": cabecera_string
 							},validate_certificate=False)
 		except Exception as e:
-			self.render_tplt('/templates/unatienindex7.html',{'errorh':u" exception en getAutorizar_cabecera : %s" % e.message})
+			self.devolPagError(u" exception en getAutorizar_cabecera : %s" % e.message)
+			#self.render_tplt('/templates/unatienindex7.html',{'errorh':u" exception en getAutorizar_cabecera : %s" % e.message})
 			#self.response.out.write(u" exception en getAutorizar_cabecera : %s" % e.message)
 			return
 		if result.status_code == 200:
 			#datagettok=json.loads(result.content)
-			"""oauth_token=kegRSaNdMxqxCWlELgH6dnYNeZquMZw36giljy1DA&
-			oauth_token_secret=n7Ya7LpvGeoj5lIv4Njd08pMRHoTukSAtWHwqg&
+			"""oauth_token=
+			oauth_token_secret=
 			oauth_callback_confirmed=true"""
 			vari = result.content.split("&")
 			mijson={}
@@ -344,10 +370,12 @@ class logintwitter(baseTwitter):
 				#self.response.out.write(u"ok en oauth_token = %s" % datagettok["oauth_token"])
 				self.redirect("https://api.twitter.com/oauth/authenticate?oauth_token=%s" % twt)
 			else:
-				self.render_tplt('/templates/unatienindex7.html',{'errorh':u"no oauth_token o oauth_token_secret or ..., <p> content=%s" % result.content})
+				self.devolPagError(u"no oauth_token o oauth_token_secret or ..., <p> content=%s" % result.content)
+				#self.render_tplt('/templates/unatienindex7.html',{'errorh':u"no oauth_token o oauth_token_secret or ..., <p> content=%s" % result.content})
 				#self.response.out.write(u"no oauth_token o oauth_token_secret or ..., <p> content=%s" % result.content)
 		else:
-			self.render_tplt('/templates/unatienindex7.html',{'errorh':u"no status 200 en login twuitter oauth/request_token, <p> content=%s</p><p> firma=%s</p>" % (result.content,fir)})
+			self.devolPagError(u"no status 200 en login twuitter oauth/request_token, <p> content=%s</p><p> firma=%s</p>" % (result.content,fir))
+			#self.render_tplt('/templates/unatienindex7.html',{'errorh':u"no status 200 en login twuitter oauth/request_token, <p> content=%s</p><p> firma=%s</p>" % (result.content,fir)})
 			#self.response.out.write(u"no status 200 en login twuitter oauth2/token, <p> content=%s</p><p> firma=%s</p>" % (result.content,fir))
 		
 
@@ -392,7 +420,8 @@ class returnurlHandlertw(baseTwitter):
 		oav=self.request.get('oauth_verifier')
 
 		if not oat or not oav or not oat == self.session.get("tw-oauth_token_pru"):
-			self.render_tplt('/templates/unatienindex7.html',{'errorh':"fallo en recibo oauth_token o oauth_verifier, en returnurlHandler oat=%s, oav=%s, sesi.tw.oau=%s" % (oat,oav,self.session.get("tw-oauth_token_pru"))})
+			self.devolPagError("fallo en recibo oauth_token o oauth_verifier, en returnurlHandler oat=%s, oav=%s, sesi.tw.oau=%s" % (oat,oav,self.session.get("tw-oauth_token_pru")))
+			#self.render_tplt('/templates/unatienindex7.html',{'errorh':"fallo en recibo oauth_token o oauth_verifier, en returnurlHandler oat=%s, oav=%s, sesi.tw.oau=%s" % (oat,oav,self.session.get("tw-oauth_token_pru"))})
 			#self.response.out.write("fallo en recibo oauth_token o oauth_verifier, puede que memcache falle en returnurlHandler oat=%s, oav=%s" % (oat,oav) )
 			return
 		u="https://api.twitter.com/oauth/access_token"
@@ -410,7 +439,8 @@ class returnurlHandlertw(baseTwitter):
 		                	"Content-Type": "application/x-www-form-urlencoded"
 							},validate_certificate=False)
 		except Exception as e:
-			self.render_tplt('/templates/unatienindex7.html',{'errorh':u"exception en returnurlHandlertw : %s" % e.message})
+			self.devolPagError(u"exception en returnurlHandlertw : %s" % e.message)
+			#self.render_tplt('/templates/unatienindex7.html',{'errorh':u"exception en returnurlHandlertw : %s" % e.message})
 			#self.response.out.write(u"exception en returnurlHandler : %s" % e.message)
 			return
 		if result.status_code == 200:
@@ -426,13 +456,16 @@ class returnurlHandlertw(baseTwitter):
 					
 					self.render_tplt('/templates/pedidoa.html',resinf[1])
 				else:
-					self.render_tplt('/templates/unatienindex7.html',{'errorh':resinf[1]})
+					self.devolPagError(resinf[1])
+					#self.render_tplt('/templates/unatienindex7.html',{'errorh':resinf[1]})
 				#self.response.out.write(resinf[1])
 			else:
-				self.render_tplt('/templates/unatienindex7.html',{'errorh':u"no hay oauth_token,oauth_token_secret en mijson content = %s" % result.content})
+				self.devolPagError(:u"no hay oauth_token,oauth_token_secret en mijson content = %s" % result.content)
+				#self.render_tplt('/templates/unatienindex7.html',{'errorh':u"no hay oauth_token,oauth_token_secret en mijson content = %s" % result.content})
 				#self.response.out.write(u"no hay oauth_token en mijson content = %s" % result.content)
 		else:
-			self.render_tplt('/templates/unatienindex7.html',{'errorh':"no status 200  en returnurlHandlertw content=%s" % result.content})
+			self.devolPagError("no status 200  en returnurlHandlertw content=%s" % result.content)
+			#self.render_tplt('/templates/unatienindex7.html',{'errorh':"no status 200  en returnurlHandlertw content=%s" % result.content})
 			#self.response.out.write("no status 200  en returnurlHandler content=%s" % result.content)
 
 	

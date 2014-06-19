@@ -193,7 +193,20 @@ class clTienda(baserequest.respuesta):
 			if hayti and not hayti.key.id() == tikey.key.id(): #integer_id() == tikey.integer_id():
 				self.errornor("1.5 en modificación Nombre de tienda ( %s ) no valido ya existe" % datos["nombre"])
 				return False
-			memcache.delete_multi((nomtiup,nomtiup+"tienda",nomtiup+"key"))
+			lista_tiendas=memcache.get("listadetiendas")
+			if lista_tiendas:
+				if lista_tiendas.has_key(ti.nombreupper):
+					del lista_tiendas[ti.nombreupper]
+			else:
+				lista_tiendas={}
+			lista_tiendas[nomtiup]=tikey.key.id()
+			hoy=datetime.datetime.now()
+			masuno=hoy + datetime.timedelta(days=1)
+			memcache.set("listadetiendas",lista_tiendas,time=(datetime.datetime(masuno.year,masuno.month,masuno.day)-hoy).total_seconds())
+			#"%dkey" % ti.idtien,
+			#memcache.delete("%dtienda" % idtien)
+			#memcache.delete_multi((idtien,"%dtienda" % idtien))
+			#memcache.delete_multi((nomtiup,nomtiup+"tienda",nomtiup+"key"))
 
 		if len(datos["em2"]) > 0:
 			datos["em1"]=(datos["em1"],datos["em2"])
@@ -260,6 +273,7 @@ class clTienda(baserequest.respuesta):
 			#oldnom=tikey.nombreupper
 			tikey.populate(nombre=datos["nombre"],nombreupper=nomtiup,calle=datos["calle"],provincia=datos["provin"],localidad=datos["loca"],cdp=datos["cdp"],posmapa=todosmodelos.ndb.GeoPt(lat, longi),dirmapa=datos["dirma"],cod_postal=datos["cp"],poblaciones=datos["poblas"],ult_modi=valmodi,usohorario=datos["usohorario"],email=datos["em1"],telefono=datos["tele1"],forma_pago=datos["pago"],horario=hors,zona_reparto=puntos,tiempo_recoger=tireco,tiempo_domicilio=tidomi,prepedmindom=premin)
 			ok=tikey.put()
+			memcache.delete("%dtienda" % ok.id())
 			#if not oldnom == nomtiup:
 			#	memcache.delete_multi([oldnom,oldnom+"key",oldnom+"haymodi"])
 				#memcache.delete(nomtiup)

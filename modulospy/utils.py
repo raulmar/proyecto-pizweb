@@ -62,7 +62,7 @@ config = {
 	'secret_key': 'YOUR_SECRET_KEY'
   }
 }
-
+_LISTA_TIENDAS="listadetiendas"
 def nuevo_token():
 	chars=string.ascii_letters + string.digits
 	tok= ''.join(random.choice(chars) for x in range(32))
@@ -252,13 +252,13 @@ class BaseHandler(respuesta):
 						else:
 							grabcli=True
 							kcli=user.key
-							usudic={"ultimopedido":user.ultimopedido,"idsocial":user.idsocial,"numpedidos":user.numpedidos,'email':user.email }
+							usudic={"ultimopedido":user.ultimopedido if user.ultimopedido else datped["horaped"],"idsocial":user.idsocial,"numpedidos":user.numpedidos,'email':user.email }
 							pedido["cliente"] ={'id':kcli.id(),'usu':usudic,'tipo':clire["tipo"],'avatar':clire["avatar"],'nombre':clire["nombre"]}
 				else:
 					grabcli=True
 					user=clire["usu"]
 					kcli=user.key
-					usudic={"ultimopedido":user.ultimopedido,"idsocial":user.idsocial,"numpedidos":user.numpedidos,'email':user.email }
+					usudic={"ultimopedido":user.ultimopedido if user.ultimopedido else datped["horaped"],"idsocial":user.idsocial,"numpedidos":user.numpedidos,'email':user.email }
 					if not clire["tipo"] == "bd":
 						pedido["cliente"] ={'id':kcli.id(),'usu':usudic,'tipo':clire["tipo"],'avatar':clire["avatar"],'nombre':clire["nombre"]}
 					else:
@@ -308,6 +308,10 @@ class BaseHandler(respuesta):
 					nped=user.numpedidos+1
 					user.populate(ultimopedido=datped["horaped"],numpedidos=nped)
 					user.put_async()
+					if not clire["tipo"] == "bd":
+						self.session['cliente']= {'tipo':clire["tipo"],"usu":user,"avatar":clire["avatar"],"nombre":clire["nombre"], "tienda":clire["tienda"]}
+					else:
+						self.session['cliente']= {'tipo':"bd","usu":user,"tienda":clire["tienda"]}
 				return (True,okped)
 			else:
 				return (False,u"no hay conexión con tienda status code=%d" % result.status_code)
@@ -434,6 +438,26 @@ def getSegundos():
 	masuno=hoy + datetime.timedelta(days=1)
 	return (datetime.datetime(masuno.year,masuno.month,masuno.day)-hoy).total_seconds()
 
+def getMemKeyTienda(nomtien):
+	nomtien=nomtien.upper()
+	list_tiendas=memcache.get(_LISTA_TIENDAS)
+	if list_tiendas and list_tiendas.has_key(nomtien):
+		return memcache.get(list_tiendas["nomtien"]+"key")
+	return None
+def getMemTiendaMulti(nomtien):
+	nomtien=nomtien.upper()
+	list_tiendas=memcache.get(_LISTA_TIENDAS)
+	if list_tiendas and list_tiendas.has_key(nomtien):
+		return  (memcache.get(list_tiendas["nomtien"]+"tienda"),memcache.get(list_tiendas["nomtien"]+"key"))
+	return (None,None)
+def addMemTienda(nomtien,idti,segundos=None):
+	nomtien=nomtien.upper()
+	list_tiendas=memcache.get(_LISTA_TIENDAS)
+	if not list_tiendas:
+		list_tiendas={}
+	list_tiendas[nomtien]=idti
+	memcache.set(_LISTA_TIENDAS,list_tiendas,time=segundos or  getSegundos())
+
 def getTienda(ti,segundos=None,hurl=None):
 
 		tims=[]
@@ -516,16 +540,20 @@ def getTienda(ti,segundos=None,hurl=None):
 			"paypal":paypal,
 			"pagantis":pagantis
 		}
-		memcache.set(ti.nombre.upper()+"tienda",memtienda,time=segundos or getSegundos())
+		#ti.nombre.upper()
+		#ti.nombreupper
+		memcache.set("%dtienda" % ti.key.id(),memtienda,time=segundos or getSegundos())
 		return memtienda
 
 def list_json(nomti):
 	nomti=nomti.upper()
-	memtienda=memcache.get(nomti+"tienda")
-	memkeyti=memcache.get(nomti+"key")
-	hoy=datetime.datetime.now()
-	masuno=hoy + datetime.timedelta(days=1)
-	
+	list_tiendas=memcache.get(_LISTA_TIENDAS)
+	if list_tiendas:
+		if list_tiendas.has_key(nomti):
+			idtien=list_tiendas[nomti]
+			memtienda=memcache.get(nomti+"tienda")
+			memkeyti=memcache.get(nomti+"key")
+			hoy=datetime.datetime.now()
 	ti=None
 	if not memtienda:
 		if memkeyti:
@@ -537,10 +565,17 @@ def list_json(nomti):
 		if not ti.webactiva:
 			return ({"tienda":{"act":False}},None)
 		memkeyti=ti.key
+		masuno=hoy + datetime.timedelta(days=1)
 		segundos=(datetime.datetime(masuno.year,masuno.month,masuno.day)-hoy).total_seconds()
-		memcache.set(nomti+"key",memkeyti,time=segundos)
-		memtienda=getTienda(ti,segundos)
-	memnomti=memcache.get(nomti)
+		#memo.AddTienda(ti.key.id())
+		#memo.grabarKey(memkeyti,ti.key.id())
+		idtien=ti.key.id()
+		addMemTienda(nomtien,idtien,segundos)
+		memcache.set("%dkey" % idtien,memkeyti,time=segundos)
+		#memcache.set(nomti+"key",memkeyti,time=segundos)
+		memtienda=getTienda(ti,segundos=segundos)
+	memnomti=memcache.get(idtien)
+	#memnomti=memcache.get(nomti)
 	if not memnomti:
 		if not ti:
 			if memkeyti:
@@ -669,7 +704,8 @@ def list_json(nomti):
 		#sorted(lisofr, key=lambda kv: kv[16])
 		
 		memnomti={"masas":lisma,"tamas":listam,"matas":lismatas,"ingres":lising,"sal":lissal,"piz":lispiz,"otros":lisotr,"unotros":jsuotr,"otrosx":lisotrx,"unotrosx":jsuotrx,"salsasx":jssalx,"ingresx":jsingx,"tamax":jstamx,"ofer":lisofr}
-		memcache.set(nomti,memnomti)
+		memcache.set(idtien,memnomti,time=segundos or getSegundos())
+		#memcache.set(nomti,memnomti)
 	memnomti["tienda"]=memtienda
 	return (memnomti,memkeyti)
 

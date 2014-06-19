@@ -147,8 +147,9 @@ window.appIni=(function(){
 			bl[1].addEventListener("click",verregis,false);
 		}
 		if (window.server.errorh){
-			errorformu=getid("errorlog101");
-			errorformu.appendChild(hUtils.crearElemento({e:"div",a:{className:"errorlog"},hijos:[{e:"a",a:{className:"cerrar",onclick:cerrarerror},hijos:[{e:"span",a:{className:"icon-cancel"}}]},{e:"span",inner:window.server.errorh }]},null));
+			//errorformu=getid("errorlog101");
+			ClAlerta.marcar({tit:"Error en login",inte:"<div>"+window.server.errorh+"</div>"});
+			//errorformu.appendChild(hUtils.crearElemento({e:"div",a:{className:"errorlog"},hijos:[{e:"a",a:{className:"cerrar",onclick:cerrarerror},hijos:[{e:"span",a:{className:"icon-cancel"}}]},{e:"span",inner:window.server.errorh }]},null));
 		}
 		var sdpas=document.getElementById("zona-rep").getElementsByTagName("p"),tx=document.getElementById("txciu");
 		for (var i=0;i<sdpas.length;i++) {

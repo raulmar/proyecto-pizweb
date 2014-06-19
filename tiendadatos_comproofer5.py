@@ -5,7 +5,7 @@ import json
 import cgi
 import datetime
 from time import time
-from google.appengine.api import memcache
+#from google.appengine.api import memcache
 #from google.appengine.api import urlfetch
 from modelos import todosmodelos
 from modulospy import clientes2 as Clien
@@ -91,7 +91,7 @@ class ComprobarOferta(utils.BaseHandler):
 			self.resjsonok("tiendaok")
 
 	def pagar_con_paypal(self):
-		paypal=modpaypal.clapi(pedido,self.res["tienda"],self.reslisjson[1],self.uri_for('returnurl', nom_tien=self.res["tienda"]["nombre"], _full=True),self.uri_for('cancelurl', nom_tien=self.res["tienda"]["nombre"], _full=True) )
+		paypal=modpaypal.clapi(pedido,self.res["tienda"],self.reslisjson[1],self.uri_for('returnurl', nom_tien=self.res["tienda"]["url_tien"], _full=True),self.uri_for('cancelurl', nom_tien=self.res["tienda"]["url_tien"], _full=True) )
 		rp=paypal.hacerPayment()
 		if rp:
 			self.session["ec_token"]=rp["ec_token"]
@@ -101,7 +101,7 @@ class ComprobarOferta(utils.BaseHandler):
 
 	def pagar_con_pagantis(self):
 		tokpag="pagantis-%d" % int(time()*1000)
-		paypal=modpagantis.formuPagantis(self.res["tienda"],self.reslisjson[1],pedido,self.uri_for('returnurlpag', nom_tien=self.res["tienda"]["nombre"], _full=True,token=tokpag),self.uri_for('cancelurlpag',nom_tien=self.res["tienda"]["nombre"], _full=True,token=tokpag),tokpag )
+		paypal=modpagantis.formuPagantis(self.res["tienda"],self.reslisjson[1],pedido,self.uri_for('returnurlpag', nom_tien=self.res["tienda"]["url_tien"], _full=True,token=tokpag),self.uri_for('cancelurlpag',nom_tien=self.res["tienda"]["url_tien"], _full=True,token=tokpag),tokpag )
 		rp=paypal.getFormulario()
 		if rp:
 			self.session["tok_pag"]=tokpag

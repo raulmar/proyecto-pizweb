@@ -88,10 +88,11 @@ class tokenPay(object):
 			self.tienda["paypal"]["expires_in"]=expi
 			self.tienda["paypal"]["access_token"]=datagettok["access_token"]
 			self.tienda["paypal"]["vino_token"]=tiem
-			nomti=self.tienda["nombre"].upper()
-			memcache.set(nomti+"tienda",self.tienda,utils.segundos())
+			nomti=self.tienda["url_tien"] #.upper()
+			idtien=self.tienda["id"]
+			memcache.set(idtien+"tienda",self.tienda,utils.getSegundos())
 			if not self.tikey:
-				self.tikey=memcache.get(nomti+"key")
+				self.tikey=memcache.get(idtien+"key")
 			if self.tikey:
 				ti=self.tikey.get()
 			else:
@@ -268,19 +269,19 @@ class returnurlHandler(utils.BaseHandler):
 		if not regtra:
 			self.response.out.write(u"mal en returnpayapl url no hay registro transferencia , token=%s,payerid=%s" % (token,PayerID))
 			return
-		
-		nomtien=nomtien.upper()
+		tienda,tikey=utils.getMemTiendaMulti(nomtien)
+		"""nomtien=nomtien.upper()
 		tienda=memcache.get(nomtien+"tienda")
-		tikey=memcache.get(nomtien+"key")
+		tikey=memcache.get(nomtien+"key")"""
 		if not tienda:
 			tien=regtra.tienda.get()
 			if tien:
-				tienda=utils.getTienda(tien,utils.segundos())
+				tienda=utils.getTienda(tien,utils.getSegundos())
 				tikey=tien.key
 			else:
 				tien=todosmodelos.Tienda.query(todosmodelos.Tienda.nombreupper==nomtien).get()
 				if tien:
-					tienda=utils.getTienda(tien,utils.segundos())
+					tienda=utils.getTienda(tien,utils.getSegundos())
 					tikey=tien.key
 				else:
 					self.response.out.write(u"no puedo llamar a tienda , token=%s,payerid=%s" % (token,PayerID))
@@ -382,18 +383,19 @@ class cancelurlHandler(utils.BaseHandler):
 		if not regtra:
 			self.response.out.write(u"mal en cancelurlhandler url no hay registro transferencia , token=%s" % token)
 			return
-		nomtien=nomtien.upper()
+		tienda,tikey=utils.getMemTiendaMulti(nomtien)
+		"""nomtien=nomtien.upper()
 		tienda=memcache.get(nomtien+"tienda")
-		tikey=memcache.get(nomtien+"key")
+		tikey=memcache.get(nomtien+"key")"""
 		if not tienda:
 			tien=regtra.tienda.get()
 			if tien:
-				tienda=utils.getTienda(tien,utils.segundos())
+				tienda=utils.getTienda(tien,utils.getSegundos())
 				tikey=tien.key
 			else:
 				tien=ti=todosmodelos.Tienda.query(todosmodelos.Tienda.nombreupper==nomtien).get()
 				if tien:
-					tienda=utils.getTienda(tien,utils.segundos())
+					tienda=utils.getTienda(tien,utils.getSegundos())
 					tikey=tien.key
 				else:
 					self.response.out.write(u"no puedo llamar a tienda cancelurlhandler, token=%s" % token)

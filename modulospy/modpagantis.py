@@ -114,18 +114,19 @@ class returnurlHandler(utils.BaseHandler):
 			self.response.out.write(u"mal en returnurlHandler pagantis no hay registro transferencia , token=%s" % token) 
 			return
 		if regtra.token_ec==token and regtra.estado=="completed":
-			nomtien=nomtien.upper()
+			tienda,tikey=utils.getMemTiendaMulti(nomtien)
+			"""nomtien=nomtien.upper()
 			tienda=memcache.get(nomtien+"tienda")
-			tikey=memcache.get(nomtien+"key")
+			tikey=memcache.get(nomtien+"key")"""
 			if not tienda:
 				tien=regtra.tienda.get()
 				if tien:
-					tienda=utils.getTienda(tien,utils.segundos())
+					tienda=utils.getTienda(tien,utils.getSegundos())
 					tikey=tien.key
 				else:
 					tien=todosmodelos.Tienda.query(todosmodelos.Tienda.nombreupper==nomtien).get()
 					if tien:
-						tienda=utils.getTienda(tien,utils.segundos())
+						tienda=utils.getTienda(tien,utils.getSegundos())
 						tikey=tien.key
 					else:
 						self.response.out.write(u"no puedo llamar a tienda , token=%s" % token)

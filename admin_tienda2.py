@@ -707,7 +707,15 @@ class act_des_Web(baserequest.respuesta):
 			hcam=True
 		if hcam:
 			ti.put()
-			memcache.delete_multi((ti.nombreupper,ti.nombreupper+"key",ti.nombreupper+"tienda"))
+			idtien=ti.key.id()
+			"""lista_tiendas=memcache.get("listadetiendas")
+			if lista_tiendas and lista_tiendas.has_key(ti.nombreupper):
+				del lista_tiendas[ti.nombreupper]
+				hoy=datetime.datetime.now()
+				masuno=hoy + datetime.timedelta(days=1)
+				memcache.set("listadetiendas",lista_tiendas,time=(datetime.datetime(masuno.year,masuno.month,masuno.day)-hoy).total_seconds())"""
+			#"%dkey" % ti.idtien,
+			memcache.delete_multi((idtien,"%dtienda" % idtien))
 		logging.info(mw)
 		self.ok(mw)
 
