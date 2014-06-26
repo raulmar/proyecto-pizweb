@@ -460,7 +460,7 @@ class returnurlHandlertw(baseTwitter):
 					#self.render_tplt('/templates/unatienindex7.html',{'errorh':resinf[1]})
 				#self.response.out.write(resinf[1])
 			else:
-				self.devolPagError(:u"no hay oauth_token,oauth_token_secret en mijson content = %s" % result.content)
+				self.devolPagError(u"no hay oauth_token,oauth_token_secret en mijson content = %s" % result.content)
 				#self.render_tplt('/templates/unatienindex7.html',{'errorh':u"no hay oauth_token,oauth_token_secret en mijson content = %s" % result.content})
 				#self.response.out.write(u"no hay oauth_token en mijson content = %s" % result.content)
 		else:

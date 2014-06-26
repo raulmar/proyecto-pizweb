@@ -8,6 +8,9 @@
 	<link rel="shortcut icon" type="image/x-icon"  href="imagenes/favicon.ico" />
 	<link rel="stylesheet"  href="css/normalize.css"/>
 	<link rel="stylesheet"  href="css/online4.css"/>
+	<!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
 	<script src="/tienda/{{ urltien }}/datjson"></script>
 	<script src="js/hUtils.js"></script>
 	<script src="js/___online_ped_ofer2.js"></script>
@@ -23,7 +26,7 @@ window.server.singmt="{{ singmt }}";
 </script>
 </head>
 <body>
-<div class="header">
+<header class="header">
 	<div class="barra-top">
       	<div class="logo">
       		<!--<div  class="menures">
@@ -40,11 +43,11 @@ window.server.singmt="{{ singmt }}";
 			</div>
       	</div>
     </div>
-</div>
+</header>
 
 
 <div id="main" class='wrapper'>
-	<div id="menuprin" >
+	<nav id="menuprin" >
 		<ul>
 			<li {% if sel<0 %} class='com-menu-selec' {% else %} class='com-menu-noselec' {% endif %}><a href="/tienda/{{ urltien }}/Pedido" >Datos Pedido</a><span></span></li>
 			<li {% if sel==0 %} class='com-menu-selec' {% else %} class='com-menu-noselec' {% endif %}><a itemprop="servesCuisine" href="/tienda/{{ urltien }}/Pizzas" ><span class='icon-pizza4'></span> Pizzas</a><span></span></li>
@@ -59,7 +62,7 @@ window.server.singmt="{{ singmt }}";
 			{% endif %}
 			<br class="clear"/>	
 		</ul>
-	</div>
+	</nav>
 	<div id='conpedido' class="nooculto"></div>
-		<div id='conarticulos' >{% block articulo %}{% endblock %}
-</div></body></html>
+	<section id='conarticulos' >{% block articulo %}{% endblock %}
+</section></div></body></html>

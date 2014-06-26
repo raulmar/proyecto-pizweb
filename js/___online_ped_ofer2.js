@@ -1232,9 +1232,11 @@ var Clpedart=(function() {
 		if (parseFloat(Number(this.precio).toFixed(2)) != predef){
 			return;
 		}
-		for (var i in almacen_act)
+		for (var i in almacen_act){
 			if (! almacen_act[i].finalizado)
 				return;
+			delete almacen_act[i].finalizado;
+		}
 		if (coped.detalle){
 			coped.tiendanom=datosart.tienda.nombre;
 			hUtils.storage.setItem("_utspo",window.btoa(window.JSON.stringify(coped)));

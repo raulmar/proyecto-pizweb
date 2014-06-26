@@ -111,6 +111,7 @@ def list_json(nomtikey,graurl,ulm):
 				pro["nid"]=p.key.id()
 				mispro.append(pro)
 			lisofr.append([i.key.id(),i.nombre,i.descrip,i.fecdes.strftime("%d/%m/%Y"),i.fechas.strftime("%d/%m/%Y"),i.horde.strftime("%H:%M"),i.horh.strftime("%H:%M"),i.dias,i.localodomi,i.ofertaenart,i.numofer,i.preciofijo,i.descuento,i.eurosoporcen,i.increm,i.numproduc,i.grupo,mispro])
+	lisofr.sort(key=lambda kv: kv[16])
 	#clake=nomti+"key"
 	memnomti={"ok":"ok","masas":lisma,"tamas":listam,"matas":lismatas,"ingres":lising,"sal":lissal,"piz":lispiz,"otros":lisotr,"unotros":jsuotr,"otrosx":lisotrx,"unotrosx":jsuotrx,"salsasx":jssalx,"ingresx":jsingx,"tamax":jstamx,"ofer":lisofr,"tienda":tienda}
 	#memcache.set_multi({clake:ti.key,nomti:memnomti},time=segundos())

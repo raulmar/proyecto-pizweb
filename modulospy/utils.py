@@ -15,7 +15,7 @@ import jinja2
 import os
 import re
 
-def slug(ca):
+"""def slug(ca):
 	slu=re.sub(r'[\?\+_&\s=/%]',"-",ca)
 	slu=re.sub(r'[ñÑ]','n',slu.lower())
 	slu=re.sub(r'[çÇ]','c',slu)
@@ -23,7 +23,7 @@ def slug(ca):
 	slu=re.sub(r'[éèÉÈ]','e',slu)
 	slu=re.sub(r'[íìÍÌ]','i',slu)
 	slu=re.sub(r'[óòÓÒ]','o',slu)
-	return re.sub(r'[úùÚÙ]','u',slu)
+	return re.sub(r'[úùÚÙ]','u',slu)"""
 
 #en vez de __file__ utilizamos directamente C:\Users\Viri\Proyectos Gae\Proyectos GAE Python3\tienda_usuario
 jinja_environment = jinja2.Environment(
@@ -448,14 +448,15 @@ def getMemTiendaMulti(nomtien):
 	nomtien=nomtien.upper()
 	list_tiendas=memcache.get(_LISTA_TIENDAS)
 	if list_tiendas and list_tiendas.has_key(nomtien):
-		return  (memcache.get(list_tiendas["nomtien"]+"tienda"),memcache.get(list_tiendas["nomtien"]+"key"))
+		idtien=list_tiendas["nomtien"]
+		return  (memcache.get(idtien+"tienda"),memcache.get(idtien+"key"))
 	return (None,None)
 def addMemTienda(nomtien,idti,segundos=None):
 	nomtien=nomtien.upper()
 	list_tiendas=memcache.get(_LISTA_TIENDAS)
 	if not list_tiendas:
 		list_tiendas={}
-	list_tiendas[nomtien]=idti
+	list_tiendas[nomtien]=str(idti)
 	memcache.set(_LISTA_TIENDAS,list_tiendas,time=segundos or  getSegundos())
 
 def getTienda(ti,segundos=None,hurl=None):
@@ -542,18 +543,20 @@ def getTienda(ti,segundos=None,hurl=None):
 		}
 		#ti.nombre.upper()
 		#ti.nombreupper
-		memcache.set("%dtienda" % ti.key.id(),memtienda,time=segundos or getSegundos())
+		memcache.set(str(ti.key.id())+"tienda",memtienda,time=segundos or getSegundos())
 		return memtienda
 
 def list_json(nomti):
 	nomti=nomti.upper()
 	list_tiendas=memcache.get(_LISTA_TIENDAS)
+	memkeyti=None
+	memtienda=None
+	hoy=datetime.datetime.now()
 	if list_tiendas:
 		if list_tiendas.has_key(nomti):
 			idtien=list_tiendas[nomti]
-			memtienda=memcache.get(nomti+"tienda")
-			memkeyti=memcache.get(nomti+"key")
-			hoy=datetime.datetime.now()
+			memtienda=memcache.get(idtien+"tienda")
+			memkeyti=memcache.get(idtien+"key")
 	ti=None
 	if not memtienda:
 		if memkeyti:
@@ -569,9 +572,9 @@ def list_json(nomti):
 		segundos=(datetime.datetime(masuno.year,masuno.month,masuno.day)-hoy).total_seconds()
 		#memo.AddTienda(ti.key.id())
 		#memo.grabarKey(memkeyti,ti.key.id())
-		idtien=ti.key.id()
-		addMemTienda(nomtien,idtien,segundos)
-		memcache.set("%dkey" % idtien,memkeyti,time=segundos)
+		idtien=str(ti.key.id())
+		addMemTienda(nomti,idtien,segundos)
+		memcache.set(idtien+"key",memkeyti,time=segundos)
 		#memcache.set(nomti+"key",memkeyti,time=segundos)
 		memtienda=getTienda(ti,segundos=segundos)
 	memnomti=memcache.get(idtien)
