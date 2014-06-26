@@ -340,7 +340,7 @@ div ::-webkit-scrollbar-track-piece {
 	cursor: pointer;
 	color:#5F4C4C;
 	border-radius: 0.5em;
-	z-index: 1000;
+	z-index: 2100;
 }
 #conarticulos > .subir:hover {
 	background-color:rgba(0,0,0,0.7);
@@ -750,7 +750,6 @@ div ::-webkit-scrollbar-track-piece {
 	padding: 1em 0;
 	box-shadow:  0px -2px 4px #555151;
 	font-size:1em; /* 1.2em;*/
-	z-index: 1000;
 	background-color:rgb(55, 154, 233); /* #DBD7D7; #34495e;*/
 	border: 2px solid rgb(55, 154, 233);
 	color:#fff;
@@ -1422,7 +1421,136 @@ div ::-webkit-scrollbar-track-piece {
 	text-align: center;
 	cursor: pointer;
 } 
+/*********************************   	CHAT    *********************/
+.chat_Pedido{
+	position: fixed;
+	/*top: calc(100% - 2em);*/
+	
+	right: 0px;
+	height: 350px;
+	width:300px;
+	-webkit-transition:bottom 0.25s;
+	-moz-transition:bottom 0.25s;
+	-o-transition:bottom 0.25s;
+	-ms-transition:bottom 0.25s;
+	transition:bottom 0.25s;
+	border-top-left-radius: 25px;
+	z-index: 2001;
+}
+.chat_Pedido_normal {
+	bottom: -318px;
+	box-shadow: -5px 5px 5px #000;
+}
+.chat_Pedido_show{
+	/*top: calc(100% - 400px);
+	top: -webkit-calc(100% - 400px);
+	top: -moz-calc(100% - 400px);*/
+	bottom:0px;
+	
+	box-shadow: 0px 0px 20px #000;
+}
+.chat_Pedido > .chat_cabecera {
+	position: absolute;
+	font-size: 1em;
+	color:#fff;
+	line-height: 2em;
+	padding: 0 1em;
+	top:0px;
+	left: 0px;
+	height: 2em;
+	background-color: #E9796D;
+	width: 100%;
+	cursor: pointer;
+	border-top-left-radius: 25px;
+}
+.chat_Pedido > .chat_cabecera:before{
+	content: "";
+	position: absolute;
+	width: 0px;
+	height: 0px;
+	z-index: 100;
+	border: 16px solid transparent;
+	transition:left 1s;
+	
+}
+.chat_Pedido_normal > .chat_cabecera:before {
+	top:-16px;
+	border-top: 0;
+	left:25px;
+	border-bottom: 16px solid #E9796D;
+}
+.chat_Pedido_show > .chat_cabecera:before {
+	top:32px;
+	left: 258px;
+	border-bottom: 0;
+	border-top: 16px solid #E9796D;
+}
+.chat_Pedido > .chat_cabecera:hover{
+	background-color:#E74C3C;
+}
+.chat_Pedido_normal > .chat_cabecera:hover:before{
+	border-bottom: 16px solid #E74C3C;
+}
+.chat_Pedido_show > .chat_cabecera:hover:before{
+	border-top: 16px solid #E74C3C;
+}
+.chat_Pedido > .dentro_chatPedido{
+	position: absolute;
+	background-color: #fff;
+	top:2em;
+	left: 0px;
+	bottom: 4em;
+	width: 100%;
+	margin:0;
+	padding: 0;
+	overflow-y: auto;
+}
+.chat_Pedido > .pie_chatPedido{
+	position: absolute;
+	left: 0px;
+	bottom: 0;
+	height: 4em;
+	width: 100%;
+	margin:0;
+	padding: 0;
+}
+.chat_Pedido > .pie_chatPedido > textarea{
+	width: 85%;
+	height: 100%;
+	resize:none;
+	background-color: #666;
+	color: #F1F0F0;
+	font-size: 0.8em;
+	border: none;
+	float: left;
+	padding: 0;
+	margin: 0;
+	padding-left: 1%;
+}
+.chat_Pedido > .pie_chatPedido > button {
+	border: none;
+	float: left;
+	width: 14%;
+	height: 100%;
+	color: #ffffff;
+}
 
+.chat_mensaje {
+	width: 96%;
+	padding: 0.5% 1%;
+	margin: 0.5em auto;
+	font-size: 0.8em;
+}
+.mensaje_mio{
+	border: 1px dashed #666;
+	background-color:rgb(242, 242, 245);
+}
+.mensaje_otro {
+	color: rgb(189, 190, 190);
+	background-color:#fff;
+}
+
+/*****************************   FIN CHAT *************************/
 
 /******************************************* MEDIA QUERIES ****************************/
 @media screen and (min-width: 1199px ){
@@ -1526,6 +1654,7 @@ div ::-webkit-scrollbar-track-piece {
 		width: 100%;
 		display: block;
 		padding: 0;
+		padding-bottom: 3em;
 	}
 	#conpedido {
 		width: 100%;

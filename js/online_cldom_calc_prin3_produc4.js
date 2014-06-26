@@ -418,7 +418,7 @@ var CldatDom=(function(){
 var ClPrin=(function(){
 	var divartis=[],menusartis=[{divarticulo:[]}],datosart,pizalgus; //,flesub,es_inicio=true;
 	var opcsel=null,marmodsel=null,ultimo=null,mipedido=null,mardom=null; //,nvenpiz=0;
-	var rutas=[],ultruta=null;
+	var rutas=[],ultruta=null,chatPedido={};
 	function sacardatosdom(){
 		if (opcsel==mardom) return;
 		if (document.body.offsetWidth<866)
@@ -1202,10 +1202,31 @@ var ClPrin=(function(){
 		window.addEventListener("beforeunload", mipedido.detalleStorage.bind(mipedido));
 		
 		mipedido.pintar_pedido_storage();
+		pintarChat();
 		
 		//window.onbeforeunload=mipedido.detalleStorage.bind(mipedido);
 		//window.onscroll=ScrollBody;
 		//scr=getid("back-top");
+	}
+	function show_chatPedido(e){
+		if (chatPedido.prin.className.indexOf("show") > -1){
+			chatPedido.prin.className="chat_Pedido chat_Pedido_normal";
+		}else {
+			chatPedido.prin.className="chat_Pedido chat_Pedido_show";
+		}
+	}
+	function enviar_Msg_Clisel(e){
+		if (chatPedido.textMsgClisel.value.length>5){
+			var dmen=document.createElement("div");
+			dmen.className="chat_mensaje "+(chatPedido.textMsgClisel.value[0]=="m" ? "mensaje_mio" : "mensaje_otro");
+			dmen.innerHTML=chatPedido.textMsgClisel.value;
+			chatPedido.dentro.appendChild(dmen);
+			chatPedido.dentro.scrollTop=chatPedido.dentro.scrollHeight;
+			chatPedido.textMsgClisel.value="";
+		}
+	}
+	function pintarChat() {
+		document.body.appendChild(hUtils.crearElemento({e:"div",did:"prin",a:{className:"chat_Pedido chat_Pedido_normal"},hijos:[{e:"div",a:{className:"chat_cabecera"},listener:{click:show_chatPedido},inner:"¿ Te puedo ayudar en algo ?"},{e:"div",did:"dentro",a:{className:"dentro_chatPedido"}},{e:"div",a:{className:"pie_chatPedido"},hijos:[{e:"textarea",did:"textMsgClisel",atr:{placeholder:"Escribe aquí tu mensaje"}},{e:"button",did:"butMsgClisel",a:{className:"btn-primary"}, inner:"<span class='icon-forward'></span>",listener:{click:enviar_Msg_Clisel} }  ]}]},chatPedido));
 	}
 	function sacarpedido() {
 		var conp=getid("conpedido");
