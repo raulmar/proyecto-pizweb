@@ -1558,7 +1558,10 @@ div ::-webkit-scrollbar-track-piece {
 	float: left;
 	/*margin-right: 12%;*/
 }
-
+.esfera{
+	width: 0px;
+	height: 0px;
+}
 /*****************************   FIN CHAT *************************/
 
 /******************************************* MEDIA QUERIES ****************************/

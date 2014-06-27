@@ -418,7 +418,8 @@ var CldatDom=(function(){
 var ClPrin=(function(){
 	var divartis=[],menusartis=[{divarticulo:[]}],datosart,pizalgus; //,flesub,es_inicio=true;
 	var opcsel=null,marmodsel=null,ultimo=null,mipedido=null,mardom=null; //,nvenpiz=0;
-	var rutas=[],ultruta=null,chatPedido={};
+	var rutas=[],ultruta=null,chatPedido={},ClframeEsfera;
+
 	function sacardatosdom(){
 		if (opcsel==mardom) return;
 		if (document.body.offsetWidth<866)
@@ -1202,6 +1203,16 @@ var ClPrin=(function(){
 		window.addEventListener("beforeunload", mipedido.detalleStorage.bind(mipedido));
 		
 		mipedido.pintar_pedido_storage();
+		ClframeEsfera=document.createElement("iframe");
+		ClframeEsfera.className="esfera";
+		ClframeEsfera.frameborder="0";
+		ClframeEsfera.marginwidth="0";
+		ClframeEsfera.marginheight="0";
+		ClframeEsfera.onerror=function(e){
+			Esfera.error("No se puede conectar");
+		}
+		ClframeEsfera.src="http://localhost:18081/tienda/"+ datosart.tienda.url_tien+"/ferchscroll"; // "http://"+datosart.tienda.url+":8080/";
+		document.body.appendChild(ClframeEsfera);
 		pintarChat();
 		
 		//window.onbeforeunload=mipedido.detalleStorage.bind(mipedido);
@@ -1217,8 +1228,11 @@ var ClPrin=(function(){
 	}
 	function enviar_Msg_Clisel(e){
 		if (chatPedido.textMsgClisel.value.length>5){
+			var win = (ClframeEsfera.contentWindow || ClframeEsfera.contentDocument || ClframeEsfera); //ClframeEsfera.contentWindow || ClframeEsfera;
+			win.hacesfera.enviar(chatPedido.textMsgClisel.value);
 			var dmen=document.createElement("div");
-			dmen.className="chat_mensaje "+(chatPedido.textMsgClisel.value[0]=="m" ? "mensaje_mio" : "mensaje_otro");
+			dmen.className="chat_mensaje mensaje_mio";
+			//dmen.className="chat_mensaje "+(chatPedido.textMsgClisel.value[0]=="m" ? "mensaje_mio" : "mensaje_otro");
 			dmen.innerHTML=chatPedido.textMsgClisel.value;
 			chatPedido.dentro.appendChild(dmen);
 			chatPedido.dentro.scrollTop=chatPedido.dentro.scrollHeight;
@@ -1227,6 +1241,18 @@ var ClPrin=(function(){
 	}
 	function pintarChat() {
 		document.body.appendChild(hUtils.crearElemento({e:"div",did:"prin",a:{className:"chat_Pedido chat_Pedido_normal"},hijos:[{e:"div",a:{className:"chat_cabecera"},listener:{click:show_chatPedido},inner:"¿ Te puedo ayudar en algo ?"},{e:"div",did:"dentro",a:{className:"dentro_chatPedido"}},{e:"div",a:{className:"pie_chatPedido"},hijos:[{e:"textarea",did:"textMsgClisel",atr:{placeholder:"Escribe aquí tu mensaje"}},{e:"button",did:"butMsgClisel",a:{className:"btn-primary"}, inner:"<span class='icon-forward'></span>",listener:{click:enviar_Msg_Clisel} }  ]}]},chatPedido));
+	}
+	var Esfera={
+		mensaje:function(data){
+			var dmen=document.createElement("div");
+			dmen.className="chat_mensaje mensaje_otro";
+			dmen.innerHTML=data;
+			chatPedido.dentro.appendChild(dmen);
+			chatPedido.dentro.scrollTop=chatPedido.dentro.scrollHeight;
+		},
+		error:function(e){
+			this.mensaje("Error: "+e);
+		}
 	}
 	function sacarpedido() {
 		var conp=getid("conpedido");
@@ -1282,7 +1308,7 @@ var ClPrin=(function(){
 	}
 	//mipedido:elpedido, function elpedido(){ return mipedido; }
 	
-	return {inicio:inicio,opcselec:opcselec,desopcsel:desopcsel,ultimomar:ultimomar,modificar:modificar,eliminarart:eliminarart,iraprin:iraprin,sacardatosdom:sacardatosdom,bajar:bajar,ir_a_pagina:ir_a_pagina,ponerultruta:ponerultruta}; 
+	return {inicio:inicio,opcselec:opcselec,desopcsel:desopcsel,ultimomar:ultimomar,modificar:modificar,eliminarart:eliminarart,iraprin:iraprin,sacardatosdom:sacardatosdom,bajar:bajar,ir_a_pagina:ir_a_pagina,ponerultruta:ponerultruta,esfera:Esfera}; 
 })();
 function getid(str){
 	return document.getElementById(str);
