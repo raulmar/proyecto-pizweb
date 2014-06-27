@@ -1536,18 +1536,27 @@ div ::-webkit-scrollbar-track-piece {
 }
 
 .chat_mensaje {
-	width: 96%;
+	/*width: 85%;*/
+	max-width: 85%;
+	min-width: 50px;
 	padding: 0.5% 1%;
 	margin: 0.5em auto;
 	font-size: 0.8em;
+	border-bottom: 2px solid rgb(189, 180, 180);
+	border-radius: 5px;
+	clear:both;
 }
 .mensaje_mio{
-	border: 1px dashed #666;
-	background-color:rgb(242, 242, 245);
+	background-color: #A3EEA0;
+	margin-right: 1%;
+	float: right;
+	/*margin-left: 12%;*/
 }
 .mensaje_otro {
-	color: rgb(189, 190, 190);
-	background-color:#fff;
+	background-color: rgb(241, 221, 196);
+	margin-left: 1%;
+	float: left;
+	/*margin-right: 12%;*/
 }
 
 /*****************************   FIN CHAT *************************/
