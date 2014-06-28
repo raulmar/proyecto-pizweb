@@ -735,7 +735,7 @@ class scriptDatos(webapp2.RequestHandler):
 		if "If-None-Match" in self.request.headers:
 			modca=self.request.headers['If-None-Match']
 		#modca=self.request.headers['Cache-control'] or self.request.headers['If-None-Match']
-		del res["tienda"]["url"]
+		#del res["tienda"]["url"]
 		del res["tienda"]["paypal"]
 		del res["tienda"]["pagantis"]
 		if not modca:
@@ -747,64 +747,7 @@ class scriptDatos(webapp2.RequestHandler):
 		#if not "Cache-control" in self.request.headers: 
 		#	self.request.headers['If-Modified-Since']
 		
-TEMPLATE_SOCKET="""
-<!DOCTYPE html>
-<html>
-<head>
-	<style >
-	body{
-		margin:0;
-		padding: 0;
-		border:none;
-		width: 0px;
-		height: 0px;
-	}
-	</style>
-	<script src='ferscroll.js'></script>
-	<script>
-		window.hacesfera=(function() {
-			var socket;
-			function inicio(fsoll){
-				socket = io.connect("http://"+fsoll+":8080/");
-				socket.on('news', function (data) {
-					window.parent.ClPrin.esfera.mensaje(data);
-					//socket.emit('my other event', { my: 'data' });
-				});
-			} 
-			function onenviar(data) {
-				socket.emit('my other event', data);
-			}
-			return {init:inicio,enviar:onenviar};
-		})();
-		window.onload=function() {
-			var fsoll="%s",cargerror=%s;
-			if (cargerror){
-				window.parent.ClPrin.esfera.error(cargerror);
-			}else {
-				window.hacesfera.init(fsoll);
-			}
-		}
-	</script>
-</head>
-<body>
-</body>
-</html>
-"""
 
-class frameSocket(webapp2.RequestHandler):
-	def get(self, *args, **kwargs):
-		nomtien = kwargs['nom_tien']
-		if len(nomtien)<2:
-			self.response.out.write(TEMPLATE_SOCKET % ("","'No hay tienda'"))
-			return
-		res=utils.list_json(nomtien)[0]
-		if not res:
-			self.response.out.write(TEMPLATE_SOCKET % ("","'No hay tienda'"))
-			return
-		if not res["tienda"]["act"] or not res["tienda"]["url"]:
-			self.response.out.write(TEMPLATE_SOCKET % ("","'11 Tienda en mantenimiento o no hay url'"))
-			return
-		self.response.out.write(TEMPLATE_SOCKET % (res["tienda"]["url"],"null"))
 
 class UntipoPro(utils.BaseHandler):
 	@utils.tienda_required
@@ -872,7 +815,6 @@ app = webapp2.WSGIApplication([
 	webapp2.Route('/tienda/<nom_tien:[^/]+>/comprobarpedido', ComprobarOferta),
 	webapp2.Route('/tienda/<nom_tien:[^/]+>/mapa', mapa),
 	webapp2.Route('/tienda/<nom_tien:[^/]+>/datjson', scriptDatos),
-	webapp2.Route('/tienda/<nom_tien:[^/]+>/ferchscroll', frameSocket),
 	webapp2.Route('/tienda/<nom_tien:[^/]+>/signup', Clien.SignupHandler),
 	webapp2.Route('/tienda/<nom_tien:[^/]+>/login', Clien.LoginHandler),
 	webapp2.Route('/tienda/<nom_tien:[^/]+>/forgot', Clien.ForgotPasswordHandler),

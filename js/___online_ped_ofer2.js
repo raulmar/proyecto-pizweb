@@ -922,6 +922,7 @@ var Clpedart=(function() {
 				this.tbody=nuebody;
 				this.numpretx.innerHTML="<div>Nº Artículos:"+this.nartis+"</div><div> Total: "+Number(this.precio).toFixed(2)+"€</div>";
 			}
+			hUtils.storage.removeItem("_utspo");
 		}
 	}
 	

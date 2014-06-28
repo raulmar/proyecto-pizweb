@@ -418,7 +418,7 @@ var CldatDom=(function(){
 var ClPrin=(function(){
 	var divartis=[],menusartis=[{divarticulo:[]}],datosart,pizalgus; //,flesub,es_inicio=true;
 	var opcsel=null,marmodsel=null,ultimo=null,mipedido=null,mardom=null; //,nvenpiz=0;
-	var rutas=[],ultruta=null,chatPedido={},ClframeEsfera;
+	var rutas=[],ultruta=null; //,chatPedido={},ClframeEsfera;
 
 	function sacardatosdom(){
 		if (opcsel==mardom) return;
@@ -472,12 +472,13 @@ var ClPrin=(function(){
 		if (opcsel !== null && opcsel.getAttribute("data-menu") == atr){
 			return;
 		}
-		var hti=this.href.substring(this.href.lastIndexOf("/")+1,this.href.length);
+		//var hti=this.href.substring(this.href.lastIndexOf("/")+1,this.href.length);
+		var hti=this.textContent || this.innerText;
 		if (rpl || (ultruta && ultruta.indexOf("editar") > -1 )){
-			console.log("hago replacestate");
+			//console.log("hago replacestate");
 			hUtils.his.replaceState({page:atr,nompage:hti},hti, this.href );
 		}else{
-			console.log("hago pushstate");
+			//console.log("hago pushstate");
 			hUtils.his.pushState({page:atr,nompage:hti},hti, this.href);
 		}
 		cambiarPagina(atr,this,this.href);
@@ -778,7 +779,8 @@ var ClPrin=(function(){
 		for ( var i=0;i<lili.length;i++){
 			var aa= lili[i].getElementsByTagName("a")[0];
 			aa.setAttribute("data-menu",i);
-			var hti= aa.href.substring(aa.href.lastIndexOf("/")+1,aa.href.length);
+			//var hti= aa.href.substring(aa.href.lastIndexOf("/")+1,aa.href.length);
+			var hti=aa.textContent || a.innerText;
 			if (lili[i].className=="com-menu-selec"){
 				opcselec(aa);
 				//if (window.history.state) window.history.state={page:i};
@@ -820,7 +822,7 @@ var ClPrin=(function(){
 				for (var d=0,lon3=inddvs.length;d<lon3;d++){
 					if (inddvs[d].className=="btn-articulo" ){
 						var inte_arti=inddvs[d].getElementsByTagName("div");
-						console.log("inte_arti=",inte_arti);
+						//console.log("inte_arti=",inte_arti);
 						for (var te=0,lon4=inte_arti.length;te<lon4;te++) {
 							if( inte_arti[te].className=="inte-btn-articulo"){
 								udb=inte_arti[te].getElementsByTagName("div");
@@ -1201,9 +1203,10 @@ var ClPrin=(function(){
 		aux.addEventListener("click",subir,false );
 		//flesub=aux;
 		window.addEventListener("beforeunload", mipedido.detalleStorage.bind(mipedido));
-		
 		mipedido.pintar_pedido_storage();
-		ClframeEsfera=document.createElement("iframe");
+		ClEsfera(mipedido,datosart);
+		
+		/*ClframeEsfera=document.createElement("iframe");
 		ClframeEsfera.className="esfera";
 		ClframeEsfera.frameborder="0";
 		ClframeEsfera.marginwidth="0";
@@ -1213,13 +1216,13 @@ var ClPrin=(function(){
 		}
 		ClframeEsfera.src="http://localhost:18081/tienda/"+ datosart.tienda.url_tien+"/ferchscroll"; // "http://"+datosart.tienda.url+":8080/";
 		document.body.appendChild(ClframeEsfera);
-		pintarChat();
+		pintarChat();*/
 		
 		//window.onbeforeunload=mipedido.detalleStorage.bind(mipedido);
 		//window.onscroll=ScrollBody;
 		//scr=getid("back-top");
 	}
-	function show_chatPedido(e){
+	/*function show_chatPedido(e){
 		if (chatPedido.prin.className.indexOf("show") > -1){
 			chatPedido.prin.className="chat_Pedido chat_Pedido_normal";
 		}else {
@@ -1253,7 +1256,7 @@ var ClPrin=(function(){
 		error:function(e){
 			this.mensaje("Error: "+e);
 		}
-	}
+	}*/
 	function sacarpedido() {
 		var conp=getid("conpedido");
 		if (conp.className!="nooculto"){
@@ -1308,7 +1311,7 @@ var ClPrin=(function(){
 	}
 	//mipedido:elpedido, function elpedido(){ return mipedido; }
 	
-	return {inicio:inicio,opcselec:opcselec,desopcsel:desopcsel,ultimomar:ultimomar,modificar:modificar,eliminarart:eliminarart,iraprin:iraprin,sacardatosdom:sacardatosdom,bajar:bajar,ir_a_pagina:ir_a_pagina,ponerultruta:ponerultruta,esfera:Esfera}; 
+	return {inicio:inicio,opcselec:opcselec,desopcsel:desopcsel,ultimomar:ultimomar,modificar:modificar,eliminarart:eliminarart,iraprin:iraprin,sacardatosdom:sacardatosdom,bajar:bajar,ir_a_pagina:ir_a_pagina,ponerultruta:ponerultruta}; 
 })();
 function getid(str){
 	return document.getElementById(str);
@@ -1335,8 +1338,8 @@ function dameart(arr,id){
 }
 
 function hUtilsdomReady() {
-	hUtils.his.ponerOrigen("tienda/"+window.server.datosart.tienda.nombre);
-	console.log("hutils origen="+hUtils.his.origen);
+	//hUtils.his.ponerOrigen("tienda/"+window.server.datosart.tienda.nombre);
+	//console.log("hutils origen="+hUtils.his.origen);
 	//var up=window.location.pathname.indexOf(window.server.datosart.tienda.nombre+"/"); // "online/");
 	ClPrin.inicio();
 	window.onpopstate = ClPrin.ir_a_pagina;

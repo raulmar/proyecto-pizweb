@@ -331,11 +331,10 @@ var hUtils=(function(ut) {
 			    }
 			}
 		};
-		ut.his={
-			ponerOrigen:function(pat) {
+		ut.his={};
+			/*ponerOrigen:function(pat) {
 				this.origen=pat;
-			}
-		};
+			}*/
 		if (window.history.state !== undefined){
 			ut.his.pushState=function(st,nst,hst){
 					window.history.pushState(st,nst,hst);
