@@ -876,6 +876,42 @@ var Clpedart=(function() {
 				ele.finalizar2(coped[1]);
 		}
 	}
+	ClasePedido.prototype.pintar_pedido=function(miped){
+		var tiart=[ClasePizza,ClaseOtronormal,ClaseOtrx],pf=-1,maxnumof=-1,nuebody=document.createElement("tbody");
+		this.nartis=this.precio=0;
+		//miped=window.JSON.parse(miped);
+		this.tabla.removeChild(this.tbody);
+		almacen_act={};
+		for (var i=0,lon=miped.detalle.length;i<lon;i++){
+			var art=new tiart[miped.detalle[i].articulo](miped.detalle[i]);
+			if (art.oferta){
+				if (pf!=art.oferta.numofer) {
+					var tr=document.createElement("tr");
+					tr.className="lineaped-tdpri";
+					var td=document.createElement("td");
+					td.colSpan=3;
+					td.innerHTML="<div >"+art.nombre_oferta()+"</div>";
+					art.trofer=tr;
+					tr.appendChild(td);
+					nuebody.appendChild(tr);
+					pf=art.oferta.numofer;
+					if (pf>maxnumof) maxnumof=pf;
+				}
+				var tr=art.lineatr("lineaofer");
+			}else {
+				var tr=art.lineatr();
+			}
+			this.poner_articulo(tr,art);
+			//tr.articulo=art;
+			this.nartis+=art.cantidad;
+			this.precio+=art.elprenocalc;
+			nuebody.appendChild(tr);
+		}
+		this.numoferta=maxnumof+1;
+		this.tabla.appendChild(nuebody);
+		this.tbody=nuebody;
+		this.numpretx.innerHTML="<div>Nº Artículos:"+this.nartis+"</div><div> Total: "+Number(this.precio).toFixed(2)+"€</div>";
+	}
 	ClasePedido.prototype.pintar_pedido_storage=function(){
 		var cok_utspo=hUtils.storage.getItem("_utspo");
 		if (cok_utspo !== null){
@@ -887,40 +923,7 @@ var Clpedart=(function() {
 			}
 			//console.log("miped = ",window.JSON.stringify(miped)," objeto=", miped);
 			if ( miped.detalle){
-				var tiart=[ClasePizza,ClaseOtronormal,ClaseOtrx],pf=-1,maxnumof=-1,nuebody=document.createElement("tbody");
-				this.nartis=this.precio=0;
-				//miped=window.JSON.parse(miped);
-				this.tabla.removeChild(this.tbody);
-				almacen_act={};
-				for (var i=0,lon=miped.detalle.length;i<lon;i++){
-					var art=new tiart[miped.detalle[i].articulo](miped.detalle[i]);
-					if (art.oferta){
-						if (pf!=art.oferta.numofer) {
-							var tr=document.createElement("tr");
-							tr.className="lineaped-tdpri";
-							var td=document.createElement("td");
-							td.colSpan=3;
-							td.innerHTML="<div >"+art.nombre_oferta()+"</div>";
-							art.trofer=tr;
-							tr.appendChild(td);
-							nuebody.appendChild(tr);
-							pf=art.oferta.numofer;
-							if (pf>maxnumof) maxnumof=pf;
-						}
-						var tr=art.lineatr("lineaofer");
-					}else {
-						var tr=art.lineatr();
-					}
-					this.poner_articulo(tr,art);
-					//tr.articulo=art;
-					this.nartis+=art.cantidad;
-					this.precio+=art.elprenocalc;
-					nuebody.appendChild(tr);
-				}
-				this.numoferta=maxnumof+1;
-				this.tabla.appendChild(nuebody);
-				this.tbody=nuebody;
-				this.numpretx.innerHTML="<div>Nº Artículos:"+this.nartis+"</div><div> Total: "+Number(this.precio).toFixed(2)+"€</div>";
+				this.pintar_pedido(miped);
 			}
 			hUtils.storage.removeItem("_utspo");
 		}
@@ -1204,8 +1207,7 @@ var Clpedart=(function() {
 					}
 				});
 	}
-	ClasePedido.prototype.detalleStorage=function(ev) {
-
+	ClasePedido.prototype.damePedido=function(){
 		var coped=CldatDom.datosdom();
 		if (this.nartis>0 ){
 			var losart=[],lon=this.tbody.rows.length;
@@ -1231,14 +1233,19 @@ var Clpedart=(function() {
 			coped.detalle=losart;
 		}
 		if (parseFloat(Number(this.precio).toFixed(2)) != predef){
-			return;
+			return null;
 		}
 		for (var i in almacen_act){
 			if (! almacen_act[i].finalizado)
-				return;
+				return null;
 			delete almacen_act[i].finalizado;
 		}
-		if (coped.detalle){
+		return coped;
+	}
+	ClasePedido.prototype.detalleStorage=function(ev) {
+
+		var coped=this.damePedido();
+		if (coped && coped.detalle){
 			coped.tiendanom=datosart.tienda.nombre;
 			hUtils.storage.setItem("_utspo",window.btoa(window.JSON.stringify(coped)));
 			console.log(" guardando session de peddo pedido=",window.JSON.stringify(coped),coped);
@@ -1249,8 +1256,8 @@ var Clpedart=(function() {
 				}).fail(function(er){
 					console.log("recibimos error respuesta en comprobar pedido er="+er);
 				});*/
-		}else if (hUtils.storage.getItem("pedido"))
-			hUtils.storage.removeItem("pedido");
+		}else if (hUtils.storage.getItem("_utspo"))
+			hUtils.storage.removeItem("_utspo");
 	}
 	ClasePedido.prototype.finalizar=function(coped) { //,reo){
 		//coped.repaoreco=reo;

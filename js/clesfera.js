@@ -34,19 +34,31 @@ var ClEsfera=(function() {
 				chatok=true;
 			}
 		});
+		socket.on("bienvenida",function(msgt){
+			pintar_msg(msgt,"mensaje_otro");
+		});
 		socket.on('msgtienda', function (data) {
 			pintar_msg(data,"mensaje_otro");
 		});
 		socket.on('pedido', function (data) {
-			pedido_act.pintar_pedido_storage(data);
+			console.log("recibo un peido =",data);
+			if (data.detalle)
+				pedido_act.pintar_pedido(data);
+			else
+				console.log("no hay detalle en pedido");
 		});
 		socket.on('damepedido', function (data) {
-			var ped=pedido_act.damepedido();
-			if (ped){
-				socket.emit('pedido', ped);
+			console.log("me piden pedido en socket");
+			var ped=pedido_act.damePedido();
+			if (ped != null ){
+				ped.haypedido=true;
+				socket.emit('pushpedido', ped);
 			}else {
-				socket.emit('pedido', null);
+				socket.emit('pushpedido', {haypedido: false});
 			}
+		});
+		socket.on("disconnect",function() {
+			pintar_msg("Chat Desconectado!!!","mensaje_otro");
 		});
 	}
 	function inicio(pedact,datosart) {
@@ -55,7 +67,7 @@ var ClEsfera=(function() {
 			socket=window.io.connect("http://"+datosart.tienda.url+":8080/");
 			addEventos();
 		}else {
-			console.log("no se puede conectar porque no hay io o no hay url tienda, io=",window.io,", datosart=",datosart);
+			console.log("no se puede conectar porque no hay io o no hay url tienda, io=",window.io,", datosart.tienda=",datosart.tienda);
 		}
 	}
 	return inicio;

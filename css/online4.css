@@ -401,7 +401,7 @@ div ::-webkit-scrollbar-track-piece {
 }
 #conpedido > table > tfoot > tr > td {
 	text-align: right;
-	padding: 1em;
+	padding: 0.5em 1em;
 }
 #conpedido > table > tfoot div {
 	width: 49%;
@@ -1470,6 +1470,10 @@ div ::-webkit-scrollbar-track-piece {
 	height: 0px;
 	z-index: 100;
 	border: 16px solid transparent;
+	-webkit-transition:left 1s;
+	-moz-transition:left 1s;
+	-o-transition:left 1s;
+	-ms-transition:left 1s;
 	transition:left 1s;
 	
 }
@@ -1547,20 +1551,16 @@ div ::-webkit-scrollbar-track-piece {
 	clear:both;
 }
 .mensaje_mio{
-	background-color: #A3EEA0;
+	background-color: #E2F7E1;
 	margin-right: 1%;
 	float: right;
 	/*margin-left: 12%;*/
 }
 .mensaje_otro {
-	background-color: rgb(241, 221, 196);
+	background-color: rgb(250, 236, 218);
 	margin-left: 1%;
 	float: left;
 	/*margin-right: 12%;*/
-}
-.esfera{
-	width: 0px;
-	height: 0px;
 }
 /*****************************   FIN CHAT *************************/
 
