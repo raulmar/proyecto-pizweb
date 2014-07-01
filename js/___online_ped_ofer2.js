@@ -877,10 +877,11 @@ var Clpedart=(function() {
 		}
 	}
 	ClasePedido.prototype.pintar_pedido=function(miped){
-		var tiart=[ClasePizza,ClaseOtronormal,ClaseOtrx],pf=-1,maxnumof=-1,nuebody=document.createElement("tbody");
+		var tiart=[ClasePizza,ClaseOtronormal,ClaseOtrx],pf=-1,maxnumof=-1;
 		this.nartis=this.precio=0;
 		//miped=window.JSON.parse(miped);
 		this.tabla.removeChild(this.tbody);
+		var nuebody=document.createElement("tbody");
 		almacen_act={};
 		for (var i=0,lon=miped.detalle.length;i<lon;i++){
 			var art=new tiart[miped.detalle[i].articulo](miped.detalle[i]);

@@ -38,7 +38,7 @@ var ClEsfera=(function() {
 			pintar_msg(msgt,"mensaje_otro");
 		});
 		socket.on('msgtienda', function (data) {
-			pintar_msg(data,"mensaje_otro");
+			pintar_msg("Tienda:<br>"+data,"mensaje_otro");
 		});
 		socket.on('pedido', function (data) {
 			console.log("recibo un peido =",data);
