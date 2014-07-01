@@ -715,7 +715,7 @@ class act_des_Web(baserequest.respuesta):
 				masuno=hoy + datetime.timedelta(days=1)
 				memcache.set("listadetiendas",lista_tiendas,time=(datetime.datetime(masuno.year,masuno.month,masuno.day)-hoy).total_seconds())"""
 			#"%dkey" % ti.idtien,
-			memcache.delete_multi((idtien,"%dtienda" % idtien))
+			memcache.delete_multi((str(idtien),"%dtienda" % idtien))
 		logging.info(mw)
 		self.ok(mw)
 

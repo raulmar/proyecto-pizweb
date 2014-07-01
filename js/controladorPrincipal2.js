@@ -164,7 +164,7 @@ function getcambio() {
 	}else
 		inicio();
 }*/
-/*window.onbeforeunload=function() {
+window.onbeforeunload=function() {
 	if (haycambios>0){
 		controladorTienda.act_des_web(0,null);
 		return "Un momento. Estamos enviando las últimas modificaciones realizadas.Presiona el botón (Logout) para salir.";
@@ -174,7 +174,7 @@ function getcambio() {
 	//if (document.getElementById("logusu").getElementsByTagName("span")[1].getElementsByTagName("button")[0].innerHTML=="Activar"){
 	//	return "No hay cambios y la Web pública está DESACTIVADA. ¿Estas seguro?";
 	//}
-}*/
+}
 return {objImagen:null,addcambio:addcambio,setcambio:setcambio,getcambio:getcambio,inicio:inicio,salir:salir,menuImagenes:menuImagenes};
 })();
 function hUtilsdomReady(){

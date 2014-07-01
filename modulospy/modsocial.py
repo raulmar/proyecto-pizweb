@@ -65,7 +65,7 @@ class pageErrorSocial(utils.BaseHandler):
 		for i in self.res["otrosx"]:
 			mpros+=", %s" % i[1]
 		template_values = {"fechahoy":hh["fechahoy"],"diahoy":hh["diahoy"],"hdias":hh["hdias"],"hresto":hh["hresto"],'titulo':"Pide %s a Domicilio y para Recoger por Internet. Ofertas exclusivas - de %s" % (mpros,self.res["tienda"]["nombre"]),'errorh':strerror }
-		self.render_tplt('/templates/unatienindex7.html',template_values)
+		self.render_tplt('unatienindex7.html',template_values)
 
 class loginfacebook(utils.BaseHandler):
 	@utils.tienda_required
@@ -213,7 +213,7 @@ class returnurlHandlerface(pageErrorSocial):
 						clien.put_async()
 			self.session['cliente']= {'tipo':"fa","usu":clien,"avatar":usu["picture"]["data"]["url"],"nombre":"<a href='https://www.facebook.com/' target='_blank'>%s</a>" % usu["name"], "tienda":self.restikey}
 			mitz=utils.USOHORARIO[self.res["tienda"]["usohorario"]]()
-			self.render_tplt('/templates/pedidoa.html',{
+			self.render_tplt('pedidoa.html',{
 				'sel':-1,
 	            'seli':-1,
 	            'hora':int(time.time()*1000),
@@ -310,7 +310,7 @@ class logintwitter(baseTwitter):
 		if twt:
 			resinf=self.getInforUsuTw(twt["oauth"],twt["token_secret"],None)
 			if resinf[0]==True:
-				self.render_tplt('/templates/pedidoa.html',resinf[1])
+				self.render_tplt('pedidoa.html',resinf[1])
 			else:
 				self.devolPagError(resinf[1])
 				#self.render_tplt('/templates/unatienindex7.html',{'errorh':resinf[1]})
@@ -454,7 +454,7 @@ class returnurlHandlertw(baseTwitter):
 				if (resinf[0]):
 					self.session["tw-usuario"]={"oauth": mijson["oauth_token"], "token_secret":mijson["oauth_token_secret"] }
 					
-					self.render_tplt('/templates/pedidoa.html',resinf[1])
+					self.render_tplt('pedidoa.html',resinf[1])
 				else:
 					self.devolPagError(resinf[1])
 					#self.render_tplt('/templates/unatienindex7.html',{'errorh':resinf[1]})

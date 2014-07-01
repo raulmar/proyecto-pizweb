@@ -26,8 +26,10 @@ import re
 	return re.sub(r'[úùÚÙ]','u',slu)"""
 
 #en vez de __file__ utilizamos directamente C:\Users\Viri\Proyectos Gae\Proyectos GAE Python3\tienda_usuario
+#os.path.normpath("C:\Users\Viri\Proyectos Gae\Proyectos GAE Python3\\proyecto-pizweb")
+#/templates/
 jinja_environment = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(os.path.normpath("C:\Users\Viri\Proyectos Gae\Proyectos GAE Python3\\proyecto-pizweb")),extensions=['jinja2.ext.loopcontrols'],trim_blocks=True)
+    loader=jinja2.FileSystemLoader(os.path.normpath(os.path.join(os.path.dirname(__file__),'..','templates'))),extensions=['jinja2.ext.loopcontrols'],trim_blocks=True)
 """jinja_environment.filters.update({
         'slug': slug
         })"""

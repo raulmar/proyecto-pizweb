@@ -32,7 +32,7 @@ class MainReal(utils.BaseHandler):
 		for i in self.res["otrosx"]:
 			mpros+=", %s" % i[1]
 		template_values = {"fechahoy":hh["fechahoy"],"diahoy":hh["diahoy"],"hdias":hh["hdias"],"hresto":hh["hresto"],'titulo':"Pide %s a Domicilio y para Recoger por Internet. Ofertas exclusivas - de %s" % (mpros,self.res["tienda"]["nombre"]) }
-		self.render_tplt('/templates/unatienindex7.html',template_values)
+		self.render_tplt('unatienindex7.html',template_values)
 
 class ComprobarOferta(utils.BaseHandler):
 	def post(self, *args, **kwargs):
@@ -764,21 +764,21 @@ class UntipoPro(utils.BaseHandler):
 		hh=None
 		if produc=="pedido":
 			hh=utils.fhorario(self.res)
-			template = '/templates/pedidoa.html'
+			template = 'pedidoa.html'
 			titulo="Pedido online"
 			sel=-1
 		elif produc=="pizzas":
-			template = '/templates/productospiz.html'
+			template = 'productospiz.html'
 			titulo="Pizzas"
 			sel=0
 		elif produc=="ofertas":
-			template = '/templates/ofertas2.html'
+			template = 'ofertas2.html'
 			titulo="Ofertas"
 			sel=1
 		else:
 			for i in self.res["otros"]:
 				if i[3]==produc:
-					template = '/templates/producot2.html'
+					template = 'producot2.html'
 					elotr=i
 					unotro=self.res["unotros"][str(i[0])]
 					sel=2
@@ -788,7 +788,7 @@ class UntipoPro(utils.BaseHandler):
 			if elotr == None:
 				for i in self.res["otrosx"]:
 					if i[5]==produc:
-						template = '/templates/producotrx2.html'
+						template = 'producotrx2.html'
 						elotrx=i
 						sel=3
 						seli=i[0]
