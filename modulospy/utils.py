@@ -149,14 +149,14 @@ class BaseHandler(respuesta):
 		cliemail="<span class='icon-user'></span> anonimo"
 		if sescli:
 			if not sescli["tipo"]=="bd" and "nombre" in sescli:
-				cliemail="<img src='%s' width='25' height='25'/> %s <a href='/tienda/%s/logout' > LOGOUT</a>" % (sescli.get("avatar"),sescli.get("nombre"),self.res["tienda"]["nombre"])
+				cliemail="<img src='%s' width='25' height='25'/> %s <a href='/tienda/%s/logout' > LOGOUT</a>" % (sescli.get("avatar"),sescli.get("nombre"),self.res["tienda"]["url_tien"])
 				self.response.cache_control = 'no-cache'
 				self.response.headers['Cache-Control'] = 'no-cache'
 				self.response.headers['Pragma']='no-cache'
 				self.response.headers['expires']='-1'
 				haycli=True
 			elif sescli["tipo"]=="bd" and sescli["tienda"] == self.restikey:
-				cliemail="<span class='icon-user'></span> %s <a href='/tienda/%s/logout' > LOGOUT</a>"  % (sescli["usu"].email, self.res["tienda"]["nombre"])
+				cliemail="<span class='icon-user'></span> %s <a href='/tienda/%s/logout' > LOGOUT</a>"  % (sescli["usu"].email, self.res["tienda"]["url_tien"])
 				self.response.cache_control = 'no-cache'
 				self.response.headers['Cache-Control'] = 'no-cache'
 				self.response.headers['Pragma']='no-cache'
