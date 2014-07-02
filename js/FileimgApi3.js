@@ -53,7 +53,7 @@ var FileimgApi=(function() {
 			}
 			if (datfile.imglis.elesel ){
 				hUtils.xJson({url:URL_img_sel,datos:window.JSON.stringify({ope:"ins",eimg:datfile.imglis.elesel.did,idti:datfile.propietario.keyControler}),formu:true}).then(function(dat){
-					controladorPrincipal.addcambio(1);
+					controladorPrincipal.addcambioIma(1);
 					console.log("respuesta enviar_img_sel =",dat);
 					imagenServidor(dat);
 				}).fail(function(dat){
@@ -141,7 +141,7 @@ var FileimgApi=(function() {
 	function eliminarImagen() {
 		if (confirm("¿Seguro que deseas eliminar esta imágen?")){
 			hUtils.xJson({url:URLELIMINAR,datos:"&nom="+datfile.nombre+"&kfg="+datfile.propietario.keyControler,formu:true}).then(function(dat){
-						controladorPrincipal.addcambio(1);
+						controladorPrincipal.addcambioIma(1);
 				  		console.log("Imágen eliminada");
 				  		console.log(dat);
 				  		datfile.fileimage.innerHTML="<p>"+dat.ok+"</p>";
@@ -275,7 +275,7 @@ var FileimgApi=(function() {
 		          var formData = new FormData();
 				  formData.append('img', file);
 				   hUtils.xJson({url:URLNUEVA+"?idti="+datfile.propietario.keyControler+"&tama="+datfile.limit,datos:formData,formu:false}).then(function(dat){
-				   		controladorPrincipal.addcambio(1);
+				   		controladorPrincipal.addcambioIma(1);
 				  		console.log("recibo ok en onok fileapinew comprobarfile=");
 				  		console.log(dat);
 				  		//console.log("url="+dat.url);
@@ -392,7 +392,7 @@ var FileimgApi=(function() {
 				else tip="Desconocido";
 				var obj={nombre:nurl.substring(nurl.lastIndexOf("/")+1),url:nurl};
 				hUtils.xJson({url:URLIMGURL,datos:window.JSON.stringify({ope:"ins",idti:datfile.propietario.keyControler,ti:tip,nombre:obj.nombre,url:nurl}),formu:true}).then(function(dat){
-					controladorPrincipal.addcambio(1);
+					controladorPrincipal.addcambioIma(1);
 					datfile.fileimage.innerHTML="";
 					ultImgKey=nurl;
 			    	datfile.fileimage.appendChild(datfile.divimagen=hUtils.crearElemento(
@@ -628,7 +628,7 @@ var FileimgApi=(function() {
 			enviar_url:function(obj,esok){
 				if (esok) {
 					hUtils.xJson({url:URL_img_sel,datos:window.JSON.stringify({ope:"ins",idorigen:obj.keyControler,iddestino:datfile.propietario.keyControler,nomimaorigen:obj.nomimaorigen}),formu:true}).then(function(dat){
-						controladorPrincipal.addcambio(1);
+						controladorPrincipal.addcambioIma(1);
 						console.log("respuesta enviar_img_sel =",dat);
 						//imagenServidor(dat);
 					}).fail(function(dat){

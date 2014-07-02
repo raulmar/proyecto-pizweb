@@ -3,7 +3,7 @@
 import webapp2
 import json
 import os
-from google.appengine.api import files,images,app_identity
+from google.appengine.api import images,app_identity
 from google.appengine.ext import ndb,blobstore
 import cloudstorage as gcs
 from modulospy import baserequest
@@ -73,23 +73,23 @@ def CreateFile(my_file,tienda):
 	# Create a GCS file with GCS client.
 	#with gcs.open(filename, 'w') as f:
 	#		f.write(my_file.file.read())
-	nombre ='/gs/'+BUCKET +'/'+str(tienda)+"/"+my_file.filename
+	nombre = BUCKET +'/'+str(tienda)+"/"+my_file.filename
 	#write_retry_params = gcs.RetryParams(backoff_factor=1.1)
 	#with gcs.open(my_file.filename, 'w') as f:
 	#	f.write(my_file.file.read())
-	gcs_file =files.gs.create(nombre,mime_type=my_file.type,acl='public-read')
+	gcs_file = gcs.open(nombre,'w',content_type=my_file.type,options={'x-goog-acl': 'public-read'})
 	#, retry_params=write_retry_paramsretry_params=write_retry_params
-	with files.open(gcs_file, 'a') as f:
-		f.write(my_file.file.read())
-	files.finalize(gcs_file)
+
+	gcs_file.write(my_file.file.read())
+	gcs_file.close()
 
 	# Blobstore API requires extra /gs to distinguish against blobstore files.
 	#blobstore_filename = '/gs' + nombre
 	# This blob_key works with blobstore APIs that do not expect a
 	# corresponding BlobInfo in datastore.
-	return blobstore.create_gs_key(nombre)
-	#blobstore_filename)
+	return blobstore.create_gs_key(blobstore_filename)
 	#return my_file.filename
+
 class CargarUrlImagen(baserequest.respuesta):
 	@baserequest.user_required_json_tienda
 	def post(self):
@@ -229,9 +229,9 @@ class CargarImagen(baserequest.BaseHandler):
 			self.response.out.write(res)
 def borrarImg_cloud(img):
 	if img.blobkeygs:
-		filenom='/gs/'+BUCKET +'/'+str(img.key.parent().id())+"/"+img.nombre
+		filenom=BUCKET +'/'+str(img.key.parent().id())+"/"+img.nombre
 		#try:
-		files.delete(filenom)
+		gcs.delete(filenom)
 		images.delete_serving_url(img.blobkeygs)
 		#except:
 		#	pass

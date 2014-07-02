@@ -47,6 +47,8 @@ var CldatDom=(function(){
 		inicio:function(miped) {
 			pedido_act=miped;
 			datosart=window.server.datosart;
+			datosart.tienda.ti_domicilio=window.server.ti_domicilio;
+			datosart.tienda.ti_recoger=window.server.ti_recoger;
 			//windowserverhora=window.server.hora;
 			var s=window.server.hhmm.split(":");
 			serverdate={"a":parseInt(s[0],10),"m":parseInt(s[1],10)-1,"d":parseInt(s[2],10),"h":parseInt(s[3],10),"mi":parseInt(s[4],10)};

@@ -516,6 +516,7 @@ def getTienda(ti,segundos=None,hurl=None):
 		memtienda={
 			"id":ti.key.id(),
 			"ult_mod":ti.ult_modi,
+			"ult_modi_tienda":ti.ult_modi_tienda or 1,
 			"act":ti.webactiva,
 			"url":ti.url,
 			"url_tien":ti.nombreupper,

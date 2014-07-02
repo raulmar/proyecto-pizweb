@@ -114,11 +114,18 @@ class returnurlHandler(utils.BaseHandler):
 			self.response.out.write(u"mal en returnurlHandler pagantis no hay registro transferencia , token=%s" % token) 
 			return
 		if regtra.token_ec==token and regtra.estado=="completed":
-			tienda,tikey=utils.getMemTiendaMulti(nomtien)
+			tikey=regtra.tienda or  utils.getMemKeyTienda(nomtien)
 			"""nomtien=nomtien.upper()
 			tienda=memcache.get(nomtien+"tienda")
 			tikey=memcache.get(nomtien+"key")"""
-			if not tienda:
+			if not tikey:
+				tikey=todosmodelos.Tienda.query(todosmodelos.Tienda.nombreupper==nomtien).get(keys_only=True)
+				if not tikey:
+					self.response.out.write(u"no puedo llamar a tienda , token=%s" % token)
+					return
+
+
+			"""if not tienda:
 				tien=regtra.tienda.get()
 				if tien:
 					tienda=utils.getTienda(tien,utils.getSegundos())
@@ -130,14 +137,13 @@ class returnurlHandler(utils.BaseHandler):
 						tikey=tien.key
 					else:
 						self.response.out.write(u"no puedo llamar a tienda , token=%s" % token)
-						return
+						return"""
 			resp=self.env_pago_grab_pedido(3,tikey,regtra)
 			if resp[0]:
 				regtra.reg_pedido=resp[1]
 				regtra.put()
 				self.session["tok_pag"]=None
 				self.session["pedido"]=None
-				self.session["tok_pag"]=None
 				self.session.pop('pedido')
 				self.session.pop("tok_pag")
 				self.session.pop("order_id")

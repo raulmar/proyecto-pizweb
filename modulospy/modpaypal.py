@@ -89,7 +89,7 @@ class tokenPay(object):
 			self.tienda["paypal"]["access_token"]=datagettok["access_token"]
 			self.tienda["paypal"]["vino_token"]=tiem
 			nomti=self.tienda["url_tien"] #.upper()
-			idtien=self.tienda["id"]
+			idtien=str(self.tienda["id"])
 			memcache.set(idtien+"tienda",self.tienda,utils.getSegundos())
 			if not self.tikey:
 				self.tikey=memcache.get(idtien+"key")

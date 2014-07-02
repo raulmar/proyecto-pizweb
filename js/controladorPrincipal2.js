@@ -36,7 +36,7 @@ function menuchange(opc){
 //var divprin=document.createElement("div");
 //divprin.className="principal"; // wrapper";
 var divs=[],
-	sel=5,contenido,subconte,menuprin,haycambios=0;
+	sel=5,contenido,subconte,menuprin,haycambios=0,haycambiosIma=0;
 /*function enviar_cambios(obj,esok) {
 	if (esok){
 		controladorTienda.act_des_web(0,"salir");
@@ -60,13 +60,14 @@ function salir() {
 	});*/
 }
 function comprobar_cambios(e){
-	if (haycambios>0){
+	if (haycambios>0 || haycambiosIma > 0){
 		controladorTienda.act_des_web(0,"salir");
-		ClAlerta.marcar({tit:"Enviando cambios",inte:"Un momento estamos enviando las últimas modificaciones"});
+		document.getElementById("logusu").getElementsByTagName("button")[0].innerHTML="Enviando cambios..."
+		//ClAlerta.marcar({tit:"Enviando cambios",inte:"Un momento estamos enviando las últimas modificaciones"});
 		//enviar_cambios();
 		//alert("Un momento. Estamos enviando las últimas modificaciones realizadas.");
 	}else if (controladorTienda.webactiva()==1){
-		ClAlerta.marcar({tit:"Activar Web",inte:"No hay cambios y la Web pública está DESACTIVADA.<br>¿Deseas ACTIVAR la Web ahora?",f:function (obj,esok) {
+		ClAlerta.marcar({tit:"Activar Web",inte:"!! No hay cambios y la Web pública está DESACTIVADA.<br>¿Deseas <b>ACTIVAR</b> la Web ahora?",f:function (obj,esok) {
 				if (esok)
 					controladorTienda.act_des_web(0,"salir");
 				else
@@ -151,11 +152,15 @@ function inicio() {
 function addcambio(n){
 	haycambios+=n;
 }
+function addcambioIma(n){
+	haycambiosIma+=n;
+}
 function setcambio(n){
 	haycambios=n;
+	haycambiosIma=n;
 }
 function getcambio() {
-	return haycambios;
+	return {cambios_art:haycambios,cambios_ima:haycambiosIma};
 }
 /*window.onload=function() {
 	if(typeof JSON!=='object'){
@@ -165,17 +170,17 @@ function getcambio() {
 		inicio();
 }*/
 window.onbeforeunload=function() {
-	if (haycambios>0){
+	if (haycambios>0 || haycambiosIma > 0){
 		controladorTienda.act_des_web(0,null);
-		return "Un momento. Estamos enviando las últimas modificaciones realizadas.Presiona el botón (Logout) para salir.";
+		return "Un momento, enviando las últimas modificaciones realizadas.Presiona el botón LOGOUT para salir.";
 	}else if (controladorTienda.webactiva()==1){
-		return "No hay cambios y la Web pública está DESACTIVADA.";
+		return "!! No hay cambios y la Web pública está DESACTIVADA.";
 	}
 	//if (document.getElementById("logusu").getElementsByTagName("span")[1].getElementsByTagName("button")[0].innerHTML=="Activar"){
 	//	return "No hay cambios y la Web pública está DESACTIVADA. ¿Estas seguro?";
 	//}
 }
-return {objImagen:null,addcambio:addcambio,setcambio:setcambio,getcambio:getcambio,inicio:inicio,salir:salir,menuImagenes:menuImagenes};
+return {objImagen:null, addcambioIma:addcambioIma,addcambio:addcambio,setcambio:setcambio,getcambio:getcambio,inicio:inicio,salir:salir,menuImagenes:menuImagenes};
 })();
 function hUtilsdomReady(){
 	controladorPrincipal.inicio();

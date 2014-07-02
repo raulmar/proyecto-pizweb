@@ -53,6 +53,7 @@ class Tienda(ndb.Model):
 	cod_postal=ndb.StringProperty(repeated=True)
 	poblaciones=ndb.StringProperty(repeated=True)
 	ult_modi=ndb.IntegerProperty()
+	ult_modi_tienda=ndb.IntegerProperty()
 	url=ndb.StringProperty()
 	webactiva=ndb.BooleanProperty(default=False)
 	email=ndb.StringProperty(repeated=True)

@@ -20,7 +20,7 @@ import otros2 as Otr
 import otrosx3 as OtrX
 import ofertas3 as Ofer
 import tienda2 as Tie
-import imgs3 as Img
+import imgs4 as Img
 import copiartodo as Copiar
 
 #tabvenme3.js
@@ -434,7 +434,7 @@ def segundos():
 	hoy=datetime.datetime.now()
 	masuno=hoy + datetime.timedelta(days=1)
 	return (datetime.datetime(masuno.year,masuno.month,masuno.day)-hoy).total_seconds()
-def list_json(ti,csrf,grabar=None,oper=None):
+def list_json(ti,csrf):
 	
 	if ti:
 		tien = ti.get()
@@ -645,22 +645,8 @@ def list_json(ti,csrf,grabar=None,oper=None):
 			memnomti={"ok":"ok","csrf":csrf,"tienda":tienj,"masas":lisma,"tamas":listam,"matas":lismatas,"ingres":lising,"sal":lissal,"piz":lispiz,"otros":lisotr,"unotros":jsuotr,"otrosx":lisotrx,"unotrosx":jsuotrx,"salsasx":jssalx,"ingresx":jsingx,"tamax":jstamx,"ofer":lisofr}
 		else:
 			memnomti={"masas":lisma,"tamas":listam,"matas":lismatas,"ingres":lising,"sal":lissal,"piz":lispiz,"otros":lisotr,"unotros":jsuotr,"otrosx":lisotrx,"unotrosx":jsuotrx,"salsasx":jssalx,"ingresx":jsingx,"tamax":jstamx,"ofer":lisofr}
-	if grabar:
-		tien.ult_modi=int(time()*1000)
-		if oper=="ins":
-			tien.webactiva=True
-		elif oper=="del":
-			tien.webactiva=False
-		memnomti["tienda"]["act"]= tien.webactiva
-		memnomti["tienda"]["ult_mod"]=tien.ult_modi
-		#nomti=tien.nombreupper
-		#clake=nomti+"key"
-		#memcache.set_multi({clake:ti,nomti:memnomti},time=segundos())
-		dum=json.dumps(memnomti,ensure_ascii=False)
-		tien.put()
-		return dum
-	else:
-		return json.dumps(memnomti,ensure_ascii=False)
+	
+	return json.dumps(memnomti,ensure_ascii=False)
 class listar(baserequest.BaseHandler):
 	def get(self):
 		mise = self.session.get('usuario')
@@ -674,11 +660,12 @@ class listar(baserequest.BaseHandler):
 class act_des_Web(baserequest.respuesta):
 	@baserequest.user_required_json_tienda
 	def post(self):
-		if  not self.objjson.has_key("cambios"):
+		if  not self.objjson.has_key("cambios_art") or not self.objjson.has_key("cambios_ima"):
 			self.errornor("error en cambios")
 			return
 		try:
-			cam=int(self.objjson["cambios"])
+			cam=int(self.objjson["cambios_art"])
+			cam_ima=int(self.objjson["cambios_ima"])
 		except Exception as e:
 			self.errornor("error en cambios")
 			return
@@ -702,12 +689,16 @@ class act_des_Web(baserequest.respuesta):
 			mw="web Activada "+ str(cam)
 		else:
 			self.errornor(u"error en operación")
-		if cam > 0 and ti:
-			ti.ult_modi=int(time()*1000)
-			hcam=True
+		if ti:
+			if cam > 0:
+				ti.ult_modi=int(time()*1000)
+				hcam=True
+			if cam_ima > 0:
+				ti.ult_modi_tienda=int(time()*1000)
+				hcam=True
 		if hcam:
 			ti.put()
-			idtien=ti.key.id()
+			idtien=str(ti.key.id())
 			"""lista_tiendas=memcache.get("listadetiendas")
 			if lista_tiendas and lista_tiendas.has_key(ti.nombreupper):
 				del lista_tiendas[ti.nombreupper]
@@ -715,7 +706,7 @@ class act_des_Web(baserequest.respuesta):
 				masuno=hoy + datetime.timedelta(days=1)
 				memcache.set("listadetiendas",lista_tiendas,time=(datetime.datetime(masuno.year,masuno.month,masuno.day)-hoy).total_seconds())"""
 			#"%dkey" % ti.idtien,
-			memcache.delete_multi((str(idtien),"%dtienda" % idtien))
+			memcache.delete_multi((idtien,"%stienda" % idtien))
 		logging.info(mw)
 		self.ok(mw)
 

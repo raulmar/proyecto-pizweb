@@ -227,7 +227,8 @@ var controladorTienda=(function(){
 	}
 	function act_des_pagina(nele,elera){
 		if ( tienda.id){
-			hUtils.xJson({url:"/admintienda/Tiendas/Web", datos:window.JSON.stringify({"ope": nele<1 ? "ins":"del","cambios":controladorPrincipal.getcambio()}),accion:"POST",formu:true}).then(function(dat){
+			var cambios=controladorPrincipal.getcambio();
+			hUtils.xJson({url:"/admintienda/Tiendas/Web", datos:window.JSON.stringify({"ope": nele<1 ? "ins":"del","cambios_art":cambios.cambios_art,"cambios_ima":cambios.cambios_ima}),accion:"POST",formu:true}).then(function(dat){
 				console.log("ok en web act des="+dat.ok);
 				tienda.web_act_des.seleccionar(nele<1 ? 0 : 1);
 				controladorPrincipal.setcambio(0);
@@ -829,7 +830,7 @@ var controladorTienda=(function(){
 		
 		venMod.aceptar.disabled=true;
 		hUtils.xJson({url:urltienda,datos:djsstr,formu:true}).then(function(res){
-			controladorPrincipal.addcambio(1);
+			//controladorPrincipal.addcambio(1);
 			console.log("recibo respuesta en comprobar ======",res);
 			tienda.keyControler=res.key.urlsafe;
 			if (ope=="ins"){
@@ -1024,7 +1025,7 @@ var controladorTienda=(function(){
 		var divtienda=document.createElement("div");
 		divtienda.className="wrapper";
 		var conte=hUtils.crearElemento({e:"div",c:{padding:"1em",textAlign:"left"},
-			hijos:[{e:"div",a:{className:"cuamensa"},c:{maxWidth:"98%"},inner:"<strong>Aviso: Mientras realices modificaciones debes de desactivar la web pública, para que ésta no sea visible al público.<br> Una vez que termines, si has realizado modificaciones debes de activar la web pública y hacer una carga de datos en la aplicación de la tienda.</strong><br>", hijos:[{e:"div",did:"div_act_des"},{e:"br",a:{className:"salto"}}]},
+			hijos:[{e:"div",a:{className:"cuamensa"},c:{maxWidth:"98%"},inner:"<b>Es Importante</b>: Que para salir de la página utilices el botón de <b>LOGOUT</b>.<br> Si vas a realizar altas, bajas o modificaciones en artículos u ofertas debes de <b>desactivar la web pública</b>, así si alguien quiere acceder se mostrará una página de mantenimiento, una vez que termines debes de <b>volver a activar la web pública y hacer una carga de datos en la aplicación de la tienda.</b><br>", hijos:[{e:"div",did:"div_act_des"},{e:"br",a:{className:"salto"}}]},
 			{e:"hr"},{e:"div",a:{className:"cajita"},
 				hijos:[{e:"div",a:{className:"cajita"},
 						hijos:[{e:"label",inner:"Nombre de Tienda:"},{e:"div",did:"nom_tien",a:{className:"conte-input"},inner:""}]},

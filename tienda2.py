@@ -181,6 +181,8 @@ class clTienda(baserequest.respuesta):
 		slugurl=slugify(datos["nombre"])
 		#nomtiup=datos["nombre"].upper()
 		nomtiup=slugurl.upper()
+		hoy=datetime.datetime.now()
+		masuno=hoy + datetime.timedelta(days=1)
 		#hayti=todosmodelos.Tienda.query(todosmodelos.Tienda.nombreupper==nomtiup).get()
 		#cant=hayti.count(limit=1)
 		if ope=="ins":
@@ -199,9 +201,7 @@ class clTienda(baserequest.respuesta):
 					del lista_tiendas[ti.nombreupper]
 			else:
 				lista_tiendas={}
-			lista_tiendas[nomtiup]=tikey.key.id()
-			hoy=datetime.datetime.now()
-			masuno=hoy + datetime.timedelta(days=1)
+			lista_tiendas[nomtiup]=str(tikey.key.id())
 			memcache.set("listadetiendas",lista_tiendas,time=(datetime.datetime(masuno.year,masuno.month,masuno.day)-hoy).total_seconds())
 			#"%dkey" % ti.idtien,
 			#memcache.delete("%dtienda" % idtien)
@@ -267,11 +267,11 @@ class clTienda(baserequest.respuesta):
 		miu=self.session.get('usuario')
 		valmodi=int(time()*1000)
 		if ope=="ins":
-			ti=todosmodelos.Tienda(parent=miu.key,nombre=datos["nombre"],nombreupper=nomtiup,calle=datos["calle"],provincia=datos["provin"],localidad=datos["loca"],cdp=datos["cdp"],posmapa=todosmodelos.ndb.GeoPt(lat, longi),dirmapa=datos["dirma"],cod_postal=datos["cp"],poblaciones=datos["poblas"],ult_modi=valmodi,usohorario=datos["usohorario"], email=datos["em1"],telefono=datos["tele1"],forma_pago=datos["pago"],horario=hors,zona_reparto=puntos,tiempo_recoger=tireco,tiempo_domicilio=tidomi,prepedmindom=premin)
+			ti=todosmodelos.Tienda(parent=miu.key,nombre=datos["nombre"],nombreupper=nomtiup,calle=datos["calle"],provincia=datos["provin"],localidad=datos["loca"],cdp=datos["cdp"],posmapa=todosmodelos.ndb.GeoPt(lat, longi),dirmapa=datos["dirma"],cod_postal=datos["cp"],poblaciones=datos["poblas"],ult_modi=valmodi,ult_modi_tienda=valmodi,usohorario=datos["usohorario"], email=datos["em1"],telefono=datos["tele1"],forma_pago=datos["pago"],horario=hors,zona_reparto=puntos,tiempo_recoger=tireco,tiempo_domicilio=tidomi,prepedmindom=premin)
 			ok=ti.put()
 		else:
 			#oldnom=tikey.nombreupper
-			tikey.populate(nombre=datos["nombre"],nombreupper=nomtiup,calle=datos["calle"],provincia=datos["provin"],localidad=datos["loca"],cdp=datos["cdp"],posmapa=todosmodelos.ndb.GeoPt(lat, longi),dirmapa=datos["dirma"],cod_postal=datos["cp"],poblaciones=datos["poblas"],ult_modi=valmodi,usohorario=datos["usohorario"],email=datos["em1"],telefono=datos["tele1"],forma_pago=datos["pago"],horario=hors,zona_reparto=puntos,tiempo_recoger=tireco,tiempo_domicilio=tidomi,prepedmindom=premin)
+			tikey.populate(nombre=datos["nombre"],nombreupper=nomtiup,calle=datos["calle"],provincia=datos["provin"],localidad=datos["loca"],cdp=datos["cdp"],posmapa=todosmodelos.ndb.GeoPt(lat, longi),dirmapa=datos["dirma"],cod_postal=datos["cp"],poblaciones=datos["poblas"],ult_modi_tienda=valmodi,usohorario=datos["usohorario"],email=datos["em1"],telefono=datos["tele1"],forma_pago=datos["pago"],horario=hors,zona_reparto=puntos,tiempo_recoger=tireco,tiempo_domicilio=tidomi,prepedmindom=premin)
 			ok=tikey.put()
 			memcache.delete("%dtienda" % ok.id())
 			#if not oldnom == nomtiup:
@@ -279,6 +279,8 @@ class clTienda(baserequest.respuesta):
 				#memcache.delete(nomtiup)
 				#memcache.delete(nomtiup+"key")
 		#memcache.add(nomtiup+"haymodi",valmodi)
+		
+
 		if ok:
 			if ope=="ins":
 				miu.tienda=ok

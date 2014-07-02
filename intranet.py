@@ -6,6 +6,7 @@ import cgi
 import re
 #import hashlib
 import datetime
+from time import time
 #from google.appengine.api import memcache
 from modelos import todosmodelos
 from modulospy import utils
@@ -172,7 +173,31 @@ class listar(webapp2.RequestHandler):
 			return
 		self.response.out.write(json.dumps(res,ensure_ascii=False))
 
+class tiendaModificarTiempos(webapp2.RequestHandler):
+	def get(self):
+		try:
+			idtien = int(self.request.get("idtienda"))
+			tidomi=int(self.request.get("tidomi"))
+			tireco=int(self.request.get("tireco"))
+		except Exception as e:
+			self.response.out.write(json.dumps({"error":"No hay id de tienda, o no hay tiempos, %s " % e.message}))
+			return
+		tien=todosmodelos.Tienda.Tget_by_id(idtien)
+		if tien:
+			valmodi=int(time()*1000)
+			tien.tiempo_recoger=tireco
+			tien.tiempo_domicilio=tidomi
+			tien.ult_modi_tienda=valmodi
+			tien.put()
+			mentien=memcache.get(str(idtien)+"tienda"):
+			if mentien:
+				mentien["ult_modi_tienda"]=valmodi
+				mencache.set(str(idtien)+"tienda",time=utils.getSegundos())
+
+		self.response.out.write(json.dumps({"ok":"tiempos modificados"}))
+
 app = webapp2.WSGIApplication([
 	('/intranet/conectar', conectar),
   	('/intranet/articulos', listar),
+  	('/intranet/modtiempos', tiendaModificarTiempos),
 ],debug=True)

@@ -726,9 +726,13 @@ class scriptDatos(webapp2.RequestHandler):
 		if not res["tienda"]["act"]:
 			self.response.set_status(404)
 			return
+		ultimamodi=	res["tienda"]["ult_mod"]
+		if  res["tienda"]["ult_modi_tienda"] > ultimamodi:
+			ultimamodi=res["tienda"]["ult_modi_tienda"]
+			
 		self.response.headers['Content-Type'] = 'application/x-javascript'
 		self.response.headers['Cache-control'] = 'public'
-		self.response.headers['ETag'] = str(res["tienda"]["ult_mod"])
+		self.response.headers['ETag'] = str(ultimamodi)
 		modca=None
 		#if "Cache-control" in self.request.headers:
 		#	modca=self.request.headers['Cache-control']
@@ -740,7 +744,7 @@ class scriptDatos(webapp2.RequestHandler):
 		del res["tienda"]["pagantis"]
 		if not modca:
 			self.response.out.write(TEMPLATE_DATJSON % json.dumps(res,ensure_ascii=False))
-		elif res["tienda"]["ult_mod"] <= int(modca):
+		elif res["tienda"]["ult_mod"] <= int(modca) and res["tienda"]["ult_modi_tienda"] <= int(modca):
 			self.response.set_status(304)
 		else:
 			self.response.out.write(TEMPLATE_DATJSON % json.dumps(res,ensure_ascii=False))
