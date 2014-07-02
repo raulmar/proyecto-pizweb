@@ -1128,7 +1128,8 @@ function dameImagenes(){
 function cambiar_Imagen(nid){
 	var tr=mipizza.tabla.getdidtr(nid);
 	if (FileimgApi.planImagenes.modo_sel){
-			return {nomimaorigen:mipizza.tabla.getModeloCelNom(tr.tr,"IMAGEN"),keyControler:tr.almacen.keyControler,nomarti:"(Pizza) "+mipizza.tabla.getModeloCelNom(tr.tr,"NOMBRE")};
+			var nombreori=mipizza.tabla.getModeloCelNom(tr.tr,"IMAGEN");
+			return {nomimaorigen:nombreori,keyControler:tr.almacen.keyControler,nomarti:"(Pizza) "+mipizza.tabla.getModeloCelNom(tr.tr,"NOMBRE"),nombre:nombreori,url:tr.almacen.ImgUrl};
 		}
 	cambiarImagen(tr.tr,tr.almacen,mipizza.tabla.getModeloCelNom(tr.tr,"NOMBRE"),mipizza.tabla.getModeloCelNom(tr.tr,"IMAGEN"),nid);
 	/*cambiarImagen(tr.almacen,mipizza.tabla.getModeloCelNom(tr.tr,"NOMBRE"),100,mipizza.tabla.getModeloCelNom(tr.tr,"IMAGEN"),function(acc,obj){ 

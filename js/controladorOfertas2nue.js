@@ -402,12 +402,12 @@ function cambiarImagen(tr,propalmacen,tit,nomima,nid){ //cambiarImagen(tr,tit,li
 		if (acc=="nueva"){
 			plantillaOfer.tabla.setModeloCelNom(tr,"IMAGEN",obj.nombre);
 			plantillaOfer.tabla.setalmacen(tr,{ImgUrl:obj.url});
-			FileimgApi.planImagenes.add_bloq_img("ofer",obj.nombre,obj.url,plantillaOfer.tabla.getModeloCelNom(tr,"NOMBRE"),null,nid);
+			FileimgApi.planImagenes.add_bloq_img("ofe",obj.nombre,obj.url,plantillaOfer.tabla.getModeloCelNom(tr,"NOMBRE"),null,nid);
 			//td.parentNode.ImgUrl=obj.url;
 		}else{
 			plantillaOfer.tabla.setModeloCelNom(tr,"IMAGEN","Añadir");
 			plantillaOfer.tabla.setalmacen(tr,{ImgUrl:null});
-			FileimgApi.planImagenes.eliminar_bloq_img("ofer",nid);
+			FileimgApi.planImagenes.eliminar_bloq_img("ofe",nid);
 			//td.parentNode.ImgUrl=null;
 		}
 	 });
@@ -1042,7 +1042,7 @@ var plantillaOfer= {
 				var nomant= plantillaOfer.tabla.getModeloCelNom(tr,"NOMBRE"); // modelo[0].get(tr.cells[1]);
 				if (nomant!=nom){
 					plantillaOfer.tabla.modLineaOrden(tr,ada,plantillaOfer.corderIns,alm);
-					FileimgApi.planImagenes.cambiar_bloq_img("ofer",ClsTabla.did(tr),null,nom);
+					FileimgApi.planImagenes.cambiar_bloq_img("ofe",ClsTabla.did(tr),null,nom);
 				}else 
 					plantillaOfer.tabla.modLinea(tr,ada,plantillaOfer.corderIns,alm);
 				plantillaOfer.tramod=null;
@@ -1098,7 +1098,8 @@ var plantillaOfer= {
 		var tr=plantillaOfer.tabla.getdidtr(nid);
 		console.log("cambiar_Imagen en ofertas");
 		if (FileimgApi.planImagenes.modo_sel){
-			return {nomimaorigen:plantillaOfer.tabla.getModeloCelNom(tr.tr,"IMAGEN"),keyControler:tr.almacen.keyControler,nomarti:"(Oferta) "+plantillaOfer.tabla.getModeloCelNom(tr.tr,"NOMBRE")};
+			var nombreori=plantillaOfer.tabla.getModeloCelNom(tr.tr,"IMAGEN");
+			return {nomimaorigen:nombreori,keyControler:tr.almacen.keyControler,nomarti:"(Oferta) "+plantillaOfer.tabla.getModeloCelNom(tr.tr,"NOMBRE"),nombre:nombreori,url:tr.almacen.ImgUrl};
 		}
 		console.log("sigo en cambiar_Imagen en ofertas");
 		cambiarImagen(tr.tr,tr.almacen,plantillaOfer.tabla.getModeloCelNom(tr.tr,"NOMBRE"),plantillaOfer.tabla.getModeloCelNom(tr.tr,"IMAGEN"),nid);

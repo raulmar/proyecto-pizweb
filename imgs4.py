@@ -73,7 +73,7 @@ def CreateFile(my_file,tienda):
 	# Create a GCS file with GCS client.
 	#with gcs.open(filename, 'w') as f:
 	#		f.write(my_file.file.read())
-	nombre = BUCKET +'/'+str(tienda)+"/"+my_file.filename
+	nombre = '/'+BUCKET +'/'+str(tienda)+"/"+my_file.filename
 	#write_retry_params = gcs.RetryParams(backoff_factor=1.1)
 	#with gcs.open(my_file.filename, 'w') as f:
 	#	f.write(my_file.file.read())
@@ -84,7 +84,7 @@ def CreateFile(my_file,tienda):
 	gcs_file.close()
 
 	# Blobstore API requires extra /gs to distinguish against blobstore files.
-	#blobstore_filename = '/gs' + nombre
+	blobstore_filename = '/gs' + nombre
 	# This blob_key works with blobstore APIs that do not expect a
 	# corresponding BlobInfo in datastore.
 	return blobstore.create_gs_key(blobstore_filename)
@@ -229,7 +229,7 @@ class CargarImagen(baserequest.BaseHandler):
 			self.response.out.write(res)
 def borrarImg_cloud(img):
 	if img.blobkeygs:
-		filenom=BUCKET +'/'+str(img.key.parent().id())+"/"+img.nombre
+		filenom='/'+BUCKET +'/'+str(img.key.parent().id())+"/"+img.nombre
 		#try:
 		gcs.delete(filenom)
 		images.delete_serving_url(img.blobkeygs)

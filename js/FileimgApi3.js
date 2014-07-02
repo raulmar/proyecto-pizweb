@@ -568,7 +568,7 @@ var FileimgApi=(function() {
 			cambiar_bloq_img:function(pro,niduo,nid,tit) {
 				var pros={
 					piz:this.secciones.pizzas,
-					ofer:this.secciones.ofertas,
+					ofe:this.secciones.ofertas,
 					otr:this.secciones.otros[nid],
 					otrx:this.secciones.otrosx[nid]
 				}
@@ -583,7 +583,7 @@ var FileimgApi=(function() {
 			add_bloq_img:function(pro,inom,isrc,iart,niduo,nid){
 				var pros={
 					piz:this.secciones.pizzas,
-					ofer:this.secciones.ofertas,
+					ofe:this.secciones.ofertas,
 					otr:function() {
 						if (this.secciones.otros[nid])
 							return this.secciones.otros[nid];
@@ -612,7 +612,7 @@ var FileimgApi=(function() {
 			eliminar_bloq_img:function(pro,niduo,nid){
 				var pros={
 					piz:this.secciones.pizzas,
-					ofer:this.secciones.ofertas,
+					ofe:this.secciones.ofertas,
 					otr:this.secciones.otros[nid],
 					otrx:this.secciones.otrosx[nid]
 				}
@@ -629,7 +629,8 @@ var FileimgApi=(function() {
 				if (esok) {
 					hUtils.xJson({url:URL_img_sel,datos:window.JSON.stringify({ope:"ins",idorigen:obj.keyControler,iddestino:datfile.propietario.keyControler,nomimaorigen:obj.nomimaorigen}),formu:true}).then(function(dat){
 						controladorPrincipal.addcambioIma(1);
-						console.log("respuesta enviar_img_sel =",dat);
+						console.log("respuesta de ... enviar_img_sel =",dat);
+						datfile.cb("nueva",obj);
 						//imagenServidor(dat);
 					}).fail(function(dat){
 				  		console.log("recibo error en enviar_img_sel =",dat);

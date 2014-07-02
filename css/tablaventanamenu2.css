@@ -671,7 +671,8 @@ form input[type="file"]{
 	box-shadow: inset 0px 0px 12px #7CB6CC;
 }
 .sec_imagenes > .bloq_imagen > div {
-	float: left;
+	/*float: left;*/
+	display: inline-block;
 	overflow: hidden;
 	width: 46%;
 }
@@ -683,6 +684,7 @@ form input[type="file"]{
 	font-weight: bold;
 	display: block;
 	color: #999;
+	word-break: break-word;
 }
 .sec_imagenes.modo_seleccion{
 	border: 8px solid #999;

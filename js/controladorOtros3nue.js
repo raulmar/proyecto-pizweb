@@ -418,7 +418,8 @@ function cambiar_Imagen(niduo,nido){
 		var econtrol=econtrol1.control.tabla;
 		var tr=econtrol.getdidtr(niduo);
 		if (FileimgApi.planImagenes.modo_sel){
-			return {nomimaorigen:econtrol.getModeloCelNom(tr.tr,"IMAGEN"),keyControler:tr.almacen.keyControler,nomarti:"("+econtrol1.tit1+") "+econtrol.getModeloCelNom(tr.tr,"NOMBRE")};
+			var nombreori=econtrol.getModeloCelNom(tr.tr,"IMAGEN");
+			return {nomimaorigen:nombreori,keyControler:tr.almacen.keyControler,nomarti:"("+econtrol1.tit1+") "+econtrol.getModeloCelNom(tr.tr,"NOMBRE"),nombre:nombreori,url:tr.almacen.ImgUrl};
 		}
 		cambiarImagen(tr.tr,tr.almacen,"("+econtrol1.tit1+") "+econtrol.getModeloCelNom(tr.tr,"NOMBRE"),econtrol.getModeloCelNom(tr.tr,"IMAGEN"),econtrol,niduo,nido);
 
